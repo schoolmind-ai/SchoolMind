@@ -1,0 +1,48 @@
+{% macro page_header(eyebrow, title, description='', actions='') -%}
+  <header class="dash-head page-heading">
+    {% if eyebrow %}<span class="eyebrow">{{ eyebrow }}</span>{% endif %}
+    <h1>{{ title }}</h1>
+    {% if description %}<p>{{ description }}</p>{% endif %}
+    {% if actions %}<div class="row-actions">{{ actions|safe }}</div>{% endif %}
+  </header>
+{%- endmacro %}
+
+{% macro empty_state(title, description='', action_url='', action_label='') -%}
+  <div class="empty-state" role="status">
+    <strong>{{ title }}</strong>
+    {% if description %}<span>{{ description }}</span>{% endif %}
+    {% if action_url and action_label %}<a class="btn ghost" href="{{ action_url }}">{{ action_label }}</a>{% endif %}
+  </div>
+{%- endmacro %}
+
+{% macro status_badge(label, tone='steady') -%}
+  <span class="status-badge risk {{ tone }}">{{ label }}</span>
+{%- endmacro %}
+
+{% macro trust_visual() -%}
+  <div class="company-image sm-trust-visual" aria-hidden="true">
+    <div class="sm-visual-grid"></div>
+    <span class="sm-trust-orbit orbit-one"></span>
+    <span class="sm-trust-orbit orbit-two"></span>
+    <div class="sm-trust-shield"><span class="sm-trust-lock"></span></div>
+    <div class="sm-visual-base"></div>
+    <i class="sm-signal signal-one"></i><i class="sm-signal signal-two"></i><i class="sm-signal signal-three"></i>
+  </div>
+{%- endmacro %}
+
+{% macro workspace_visual() -%}
+  <div class="company-image sm-workspace-visual" aria-hidden="true">
+    <div class="sm-visual-grid"></div>
+    <div class="sm-workspace-window">
+      <div class="sm-window-top"><i></i><i></i><i></i><span></span></div>
+      <div class="sm-window-body">
+        <div class="sm-window-side"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="sm-window-main">
+          <div class="sm-window-metrics"><i></i><i></i><i></i></div>
+          <div class="sm-window-chart"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+    <i class="sm-signal signal-one"></i><i class="sm-signal signal-two"></i><i class="sm-signal signal-three"></i>
+  </div>
+{%- endmacro %}

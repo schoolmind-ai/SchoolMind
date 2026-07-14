@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.companion.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head"><span class="eyebrow">{{ t('dashboard.companion.eyebrow') }}</span><h1>{{ t('dashboard.companion.heading') }}</h1><p>{{ t('dashboard.companion.intro') }}</p></div>
+    {% with title=t('dashboard.companion.safety_title'), body=t('dashboard.companion.safety_body') %}{% include "partials/ai_safety_notice.html" %}{% endwith %}
+
+    <section class="nour-chat {% if not consent_ok %}locked-section{% endif %}" data-nour-chat data-endpoint="{{ url_for('dashboard.nour_messages_api') }}">
+      <div class="chat-toolbar">
+        <span class="badge">{{ t('dashboard.companion.usage') }}: {{ remaining }} / {{ daily_limit }}</span>
+        <button class="btn ghost compact-btn" type="button" data-clear-chat>{{ t('dashboard.companion.clear_visible') }}</button>
+      </div>
+      <div class="chat-stream" data-chat-stream role="log" aria-live="polite" aria-relevant="additions text" aria-label="{{ t('dashboard.companion.conversation_label') }}">
+        {% for item in messages %}
+          <article class="chat-bubble {{ 'nour' if item.role == 'nour' else 'student' }}">
+            <div><strong>{{ 'Nour' if item.role == 'nour' else current_user.name }}</strong><span class="risk {{ item.risk_level }}">{{ tc(item.risk_level) }}</span></div>
+            <p>{% if item.role == 'nour' %}{{ tc(item.message) }}{% else %}<bdi dir="auto">{{ item.message }}</bdi>{% endif %}</p>
+            <small>{{ item.created_at }}</small>
+          </article>
+        {% else %}
+          <article class="chat-bubble nour">
+            <div><strong>Nour</strong><span class="risk steady">{{ t('dashboard.companion.steady') }}</span></div>
+            <p>{{ t('dashboard.companion.welcome') }}</p>
+          </article>
+        {% endfor %}
+      </div>
+      <form class="chat-composer" method="post" data-chat-form>
+        {% include "partials/form_csrf.html" %}
+        <label>{{ t('dashboard.companion.message_label') }}<textarea name="message" rows="4" minlength="4" maxlength="2000" required placeholder="{{ t('dashboard.companion.placeholder') }}" data-chat-input></textarea></label>
+        <div class="composer-row">
+          <small class="muted">{{ t('dashboard.companion.shift_enter') }}</small>
+          <button class="btn primary" type="submit" data-chat-submit {% if not consent_ok %}disabled{% endif %}>{{ t('dashboard.companion.send') }}</button>
+        </div>
+      </form>
+    </section>
+    <div class="dash-grid two">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.companion.suggestions') }}</h2>
+        <button class="list-row tall chat-suggestion" type="button" data-chat-suggestion="{{ t('dashboard.companion.prompt.study') }}"><span>{{ t('dashboard.companion.prompt.study') }}</span><b>{{ t('dashboard.companion.study') }}</b><small>{{ t('dashboard.companion.study_note') }}</small></button>
+        <button class="list-row tall chat-suggestion" type="button" data-chat-suggestion="{{ t('dashboard.companion.prompt.overwhelmed') }}"><span>{{ t('dashboard.companion.prompt.overwhelmed') }}</span><b>{{ t('dashboard.companion.calm') }}</b><small>{{ t('dashboard.companion.calm_note') }}</small></button>
+        <button class="list-row tall chat-suggestion" type="button" data-chat-suggestion="{{ t('dashboard.companion.prompt.support') }}"><span>{{ t('dashboard.companion.prompt.support') }}</span><b>{{ t('dashboard.companion.support') }}</b><small>{{ t('dashboard.companion.support_note') }}</small></button>
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.companion.routing_title') }}</h2>
+        <div class="list-row tall"><span>{{ t('dashboard.companion.educational_support') }}</span><b>{{ t('dashboard.companion.local_ai') }}</b><small>{{ t('dashboard.companion.educational_note') }}</small></div>
+        <div class="list-row tall"><span>{{ t('dashboard.companion.human_review') }}</span><b>{{ t('dashboard.companion.signal') }}</b><small>{{ t('dashboard.companion.review_note') }}</small></div>
+        <div class="list-row tall"><span>{{ t('dashboard.companion.daily_limit') }}</span><b>{{ t('dashboard.companion.plan') }}</b><small>{{ t('dashboard.companion.limit_note') }}</small></div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

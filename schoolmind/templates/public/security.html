@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "partials/ui_macros.html" import trust_visual %}
+{% block title %}{{ t('public.security.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section company-split">
+  <div>
+    <span class="eyebrow">{{ t('public.security.eyebrow') }}</span>
+    <h1>{{ t('public.security.heading') }}</h1>
+    <p class="lead">{{ t('public.security.lead') }}</p>
+    <div class="hero-actions"><a class="btn primary" href="{{ url_for('auth.start') }}">{{ t('public.common.start_trial') }}</a><a class="btn ghost" href="{{ url_for('public.contact') }}">{{ t('public.security.questions_link') }}</a></div>
+  </div>
+  {{ trust_visual() }}
+</section>
+<section class="section">
+  <div class="company-grid three">
+    <article class="company-card"><span class="pixel-icon">R</span><h3>{{ t('public.security.roles_title') }}</h3><p>{{ t('public.security.roles_body') }}</p></article>
+    <article class="company-card"><span class="pixel-icon">C</span><h3>{{ t('public.security.demo_title') }}</h3><p>{{ t('public.security.demo_body') }}</p></article>
+    <article class="company-card"><span class="pixel-icon">P</span><h3>{{ t('public.security.production_title') }}</h3><p>{{ t('public.security.production_body') }}</p></article>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.outbox.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.outbox.eyebrow') }}</span>
+      <h1>{{ t('dashboard.outbox.heading') }}</h1>
+      <p>{{ t('dashboard.outbox.intro') }}</p>
+    </div>
+
+    <div class="email-health-grid">
+      <article class="pixel-board wide">
+        <span class="eyebrow">{{ t('dashboard.outbox.delivery_health') }}</span>
+        <h2>{{ health.mode|upper }} {{ t('dashboard.outbox.mode') }}</h2>
+        <p class="muted">
+          {% if health.production_ready %}
+            {{ t('dashboard.outbox.smtp_ready') }}
+          {% elif health.mode == 'queue' %}
+            {{ t('dashboard.outbox.queue_note') }}
+          {% elif health.mode == 'console' %}
+            {{ t('dashboard.outbox.console_note') }}
+          {% else %}
+            {{ t('dashboard.outbox.not_ready') }}
+          {% endif %}
+        </p>
+        {% if health.warnings %}
+          <div class="notice-list">
+            {% for warning in health.warnings %}<p class="notice warning">{{ warning }}</p>{% endfor %}
+          </div>
+        {% endif %}
+      </article>
+      <div class="pixel-board wide">
+        <span class="eyebrow">{{ t('dashboard.outbox.status_counts') }}</span>
+        {% for row in counts %}
+          <div class="board-row"><span>{{ tc(row.status) }}</span><b>{{ row.total }}</b></div>
+        {% else %}
+          <div class="board-row"><span>{{ t('dashboard.outbox.no_messages') }}</span><b>0</b></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="dash-grid two">
+      <form class="pixel-form compact" method="post">
+        {% include "partials/form_csrf.html" %}
+        <input type="hidden" name="action" value="dispatch">
+        <h2>{{ t('dashboard.outbox.dispatch') }}</h2>
+        <p class="muted">{{ t('dashboard.outbox.dispatch_note') }}</p>
+        <button class="btn primary" type="submit">{{ t('dashboard.outbox.dispatch_button') }}</button>
+      </form>
+      <form class="pixel-form compact" method="post">
+        {% include "partials/form_csrf.html" %}
+        <input type="hidden" name="action" value="test_email">
+        <h2>{{ t('dashboard.outbox.test_email') }}</h2>
+        <p class="muted">{{ t('dashboard.outbox.test_note') }}</p>
+        <label>{{ t('dashboard.outbox.recipient') }}
+          <input name="recipient" type="email" value="{{ config.TEST_EMAIL_RECIPIENT }}" required>
+        </label>
+        <button class="btn secondary" type="submit">{{ t('dashboard.outbox.test_email') }}</button>
+      </form>
+    </div>
+
+    <div class="panel-list">
+      <h2>{{ t('dashboard.outbox.latest') }}</h2>
+      {% for item in outbox %}
+        <div class="list-row tall email-message-row">
+          <span>{{ item.recipient }} · {{ item.subject }}</span>
+          <b>{{ tc(item.status) }} · {{ tc(item.message_type) if item.message_type else t('dashboard.outbox.transactional') }}</b>
+          <small>
+            {{ t('dashboard.outbox.attempts') }}: {{ item.attempt_count or 0 }} · {{ item.provider_reference or t('dashboard.outbox.no_reference') }} · {{ t('dashboard.operations.queued') }} {{ item.created_at }}{% if item.sent_at %} · {{ t('dashboard.operations.sent') }} {{ item.sent_at }}{% endif %}
+          </small>
+          {% if item.last_error %}<small class="danger-text">{{ t('dashboard.outbox.last_error') }}: {{ item.last_error }}</small>{% endif %}
+          <small>{{ item.body }}</small>
+        </div>
+      {% else %}<p class="muted">{{ t('dashboard.outbox.empty') }}</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

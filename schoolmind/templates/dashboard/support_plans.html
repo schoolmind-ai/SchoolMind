@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ t('plans.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('nav.support_plans') }}</span>
+      <h1>{{ t('plans.title') }}</h1>
+      <p>{{ t('dashboard.plans.intro') }}</p>
+    </div>
+
+    <div class="dash-grid two">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.plans.history') }}</h2>
+        {% for plan in plans %}
+          <article class="list-row tall support-brief {{ plan.status }}">
+            <span>{{ tc(plan.focus_area) }}</span>
+            <b>{{ tc(plan.status) }}</b>
+            <small>{{ tc(plan.goal) }}</small>
+            <small>{{ tc(plan.next_step) }} · {{ tc(plan.cadence) }}</small>
+          </article>
+        {% else %}<p class="muted">{{ t('common.empty') }}</p>{% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.plans.requests') }}</h2>
+        {% for item in requests %}
+          <article class="list-row tall">
+            <span>{{ item.topic }}</span>
+            <b>{{ tc(item.status) }}</b>
+            <small>{{ item.message }}</small>
+            <small>{{ item.created_at }}</small>
+          </article>
+        {% else %}<p class="muted">{{ t('common.empty') }}</p>{% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

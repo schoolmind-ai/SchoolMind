@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.admin.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.admin.eyebrow') }}</span>
+      <h1>{{ t('dashboard.admin.heading') }}</h1><p>{{ t('dashboard.admin.intro') }}</p>
+    </div>
+
+    {% include "partials/role_command_center.html" %}
+
+    {% if role_board.governance %}
+      <section class="role-note-grid" aria-label="{{ t('dashboard.admin.governance_aria') }}">
+        {% for item in role_board.governance %}
+          <article class="role-note-card">
+            <h3>{{ item.label }}</h3>
+            <p>{{ item.value }}</p>
+          </article>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    <div class="metric-strip">
+      <div class="metric-card"><small>{{ t('dashboard.admin.metric.students') }}</small><strong>{{ counts.students }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.admin.metric.teachers') }}</small><strong>{{ counts.teachers }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.admin.metric.counselors') }}</small><strong>{{ counts.counselors }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.admin.metric.admins') }}</small><strong>{{ counts.admins }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.admin.metric.open_events') }}</small><strong>{{ counts.open_events }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.admin.metric.scans') }}</small><strong>{{ counts.assessments }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.admin.metric.active_plans') }}</small><strong>{{ counts.active_plans }}</strong></div>
+    </div>
+    <div class="dash-grid two">
+      <form class="pixel-form compact" method="post" action="{{ url_for('dashboard.admin_create_user') }}">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.admin.create_user') }}</h2>
+        <label>{{ t('dashboard.admin.name') }}<input name="name" required></label>
+        <label>{{ t('dashboard.admin.email') }}<input name="email" type="email" required></label>
+        <label>{{ t('dashboard.admin.role') }}<select name="role">{% for role in roles %}<option value="{{ role }}">{{ t('role.' ~ role) }}</option>{% endfor %}</select></label>
+        <label>{{ t('dashboard.admin.group') }}<input name="group_name" placeholder="{{ t('dashboard.admin.group_placeholder') }}"></label>
+        <label>{{ t('dashboard.admin.temporary_password') }}<input name="password" type="password" autocomplete="new-password" minlength="8" required placeholder="{{ t('dashboard.admin.password_placeholder') }}"></label>
+        <p class="form-help">{{ t('dashboard.admin.password_help') }}</p>
+        <button class="btn primary" type="submit">{{ t('dashboard.admin.create') }}</button>
+      </form>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.admin.audit_log') }}</h2>
+        {% for item in audit %}<div class="list-row tall"><span>{{ item.action }}</span><b>{{ item.created_at }}</b><small>{{ item.detail }}</small></div>{% else %}<p class="muted">{{ t('dashboard.admin.empty_audit') }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="panel-list">
+      <h2>{{ t('dashboard.admin.users') }}</h2>
+      {% for user in users %}
+        <div class="list-row tall">
+          <span>{{ user.name }} · {{ user.email }}</span>
+          <b>{{ t('role.' ~ user.role) }} · {{ t('dashboard.common.active') if user.is_active else t('dashboard.common.disabled') }}</b>
+          <small>{{ user.group_name or t('dashboard.common.no_group') }}</small>
+          {% if user.id != current_user.id %}
+            <form method="post" action="{{ url_for('dashboard.admin_toggle_user', user_id=user.id) }}" data-confirm="{{ t('dashboard.admin.confirm_status') }} {{ user.name }}?">
+              {% include "partials/form_csrf.html" %}
+              <button class="btn ghost" type="submit">{{ t('dashboard.admin.disable') if user.is_active else t('dashboard.admin.reactivate') }}</button>
+            </form>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

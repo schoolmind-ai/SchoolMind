@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.counselors.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.counselors.eyebrow') }}</span>
+  <h1>{{ t('public.counselors.heading') }}</h1>
+  <p class="lead">{{ t('public.counselors.lead') }}</p>
+</section>
+<section class="section company-split">
+  <div>
+    <span class="eyebrow">{{ t('public.counselors.workflow_eyebrow') }}</span>
+    <h2>{{ t('public.counselors.workflow_heading') }}</h2>
+    <ul class="company-list">
+      <li>{{ t('public.counselors.point_1') }}</li>
+      <li>{{ t('public.counselors.point_2') }}</li>
+      <li>{{ t('public.counselors.point_3') }}</li>
+      <li>{{ t('public.counselors.point_4') }}</li>
+    </ul>
+  </div>
+  <div class="company-image"><picture class="smart-picture"><source srcset="{{ url_for('static', filename='img/pages/08_school_admin_operations.webp') }}" type="image/webp"><img src="{{ url_for('static', filename='img/pages/08_school_admin_operations.png') }}" alt="{{ t('public.counselors.image_alt') }}" loading="lazy" decoding="async" width="368" height="350"></picture></div>
+</section>
+{% endblock %}

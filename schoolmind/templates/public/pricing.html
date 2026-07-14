@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% from "partials/ui_macros.html" import trust_visual %}
+{% block title %}{{ t('public.pricing.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact pricing-hero">
+  <span class="eyebrow">{{ t('public.pricing.eyebrow') }}</span>
+  <h1>{{ t('public.pricing.heading') }}</h1>
+  <p class="lead">{{ t('public.pricing.lead') }}</p>
+  <div class="trust-strip pricing-strip">
+    <span>{{ t('public.pricing.trust_trial') }}</span>
+    <span>{{ t('public.pricing.trust_school') }}</span>
+    <span>{{ t('public.pricing.trust_cycles') }}</span>
+    <span>{{ t('public.pricing.trust_seats') }}</span>
+  </div>
+</section>
+
+<section class="section billing-toggle-note" aria-labelledby="billing-options-title">
+  <div>
+    <span class="eyebrow">{{ t('public.pricing.billing_eyebrow') }}</span>
+    <h2 id="billing-options-title">{{ t('public.pricing.billing_heading') }}</h2>
+    <p class="lead">{{ t('public.pricing.billing_body') }}</p>
+  </div>
+  <div class="billing-cycle-cards" aria-label="{{ t('public.pricing.billing_aria') }}">
+    <article>
+      <strong>{{ t('public.pricing.monthly') }}</strong>
+      <span>{{ t('public.pricing.monthly_body') }}</span>
+    </article>
+    <article>
+      <strong>{{ t('public.pricing.six_months') }}</strong>
+      <span>{{ t('public.pricing.six_months_body') }}</span>
+    </article>
+    <article>
+      <strong>{{ t('public.pricing.annual') }}</strong>
+      <span>{{ t('public.pricing.annual_body') }}</span>
+    </article>
+  </div>
+</section>
+
+<section class="pricing-grid company-pricing detailed-pricing" aria-label="{{ t('public.pricing.plans_aria') }}">
+  {% for plan in pricing_catalog %}
+  <article class="price-card {% if plan.key == 'growth' %}featured{% endif %}">
+    <span class="eyebrow">{{ t('public.pricing.plan_' ~ plan.key) }}</span>
+    {% if plan.is_custom %}
+      <span class="price-number">{{ t('public.pricing.custom') }}</span>
+      <p class="price-note">{{ t('public.pricing.custom_body') }}</p>
+    {% else %}
+      {% set monthly_display = plan.monthly_price|int if plan.monthly_price == plan.monthly_price|int else plan.monthly_price %}
+      {% set six_month_display = plan.six_month_price|int if plan.six_month_price == plan.six_month_price|int else plan.six_month_price %}
+      {% set annual_display = plan.annual_price|int if plan.annual_price == plan.annual_price|int else plan.annual_price %}
+      <span class="price-number">${{ monthly_display }}<small>/{{ t('public.pricing.month') }}</small></span>
+      <p class="price-note">{{ t('public.pricing.six_months') }}: ${{ six_month_display }} · {{ t('public.pricing.annual') }}: ${{ annual_display }}/{{ t('public.pricing.year') }} · {{ t('public.pricing.about') }} ${{ plan.annual_effective_monthly }}/{{ t('public.pricing.month') }}</p>
+    {% endif %}
+    <p>{{ tc(plan.tagline) }}</p>
+    <strong>{{ tc(plan.limits) }}</strong>
+    <p class="muted">{{ t('public.pricing.staff_limit') }}: <bdi>{{ plan.staff_limit }}</bdi> · {{ t('public.pricing.extra_seats') }}: <bdi>{{ tc(plan.extra_student_fee) }}</bdi></p>
+    <p class="muted">{{ tc(plan.extra_student_note) }}</p>
+    <ul>{% for feature in plan.features %}<li>{{ tc(feature) }}</li>{% endfor %}</ul>
+    <div class="row-actions stacked-actions">
+      {% if plan.is_custom %}
+        <a class="btn primary" href="{{ url_for('public.request_demo') }}">{{ t('public.common.request_guided_pilot') }}</a>
+        <a class="btn ghost" href="{{ url_for('public.contact') }}">{{ t('public.pricing.discuss_terms') }}</a>
+      {% else %}
+        <a class="btn primary" href="{{ url_for('auth.start', plan=plan.key, billing_cycle='monthly') }}">{{ t('public.pricing.start_monthly') }}</a>
+        <a class="btn ghost" href="{{ url_for('auth.start', plan=plan.key, billing_cycle='six_month') }}">{{ t('public.pricing.start_six_month') }}</a>
+        <a class="btn ghost" href="{{ url_for('auth.start', plan=plan.key, billing_cycle='annual') }}">{{ t('public.pricing.start_annual') }}</a>
+      {% endif %}
+    </div>
+  </article>
+  {% endfor %}
+</section>
+
+<section class="section comparison-section" aria-labelledby="comparison-title">
+  <span class="eyebrow">{{ t('public.pricing.comparison_eyebrow') }}</span>
+  <h2 id="comparison-title">{{ t('public.pricing.comparison_heading') }}</h2>
+  <div class="comparison-table-wrap">
+    <table class="comparison-table">
+      <caption class="sr-only">{{ t('public.pricing.comparison_caption') }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{{ t('public.pricing.table_plan') }}</th>
+          <th scope="col">{{ t('public.pricing.table_students') }}</th>
+          <th scope="col">{{ t('public.pricing.table_staff') }}</th>
+          <th scope="col">{{ t('public.pricing.table_best_for') }}</th>
+          <th scope="col">{{ t('public.pricing.table_after_limit') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for plan in pricing_catalog %}
+        <tr>
+          <td><strong>{{ t('public.pricing.plan_' ~ plan.key) }}</strong></td>
+          <td>{% if plan.is_custom %}{{ t('public.pricing.negotiated') }}{% else %}{{ plan.student_limit }}{% endif %}</td>
+          <td>{% if plan.is_custom %}{{ t('public.pricing.negotiated') }}{% else %}{{ plan.staff_limit }}{% endif %}</td>
+          <td>{{ tc(plan.best_for) }}</td>
+          <td><bdi>{{ tc(plan.extra_student_fee) }}</bdi></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section company-split pricing-explainer">
+  <div>
+    <span class="eyebrow">{{ t('public.pricing.after_eyebrow') }}</span>
+    <h2>{{ t('public.pricing.after_heading') }}</h2>
+    <p class="lead">{{ t('public.pricing.after_body') }}</p>
+    <ul class="company-list">
+      <li>{{ t('public.pricing.after_point_1') }}</li>
+      <li>{{ t('public.pricing.after_point_2') }}</li>
+      <li>{{ t('public.pricing.after_point_3') }}</li>
+      <li>{{ t('public.pricing.after_point_4') }}</li>
+    </ul>
+  </div>
+  {{ trust_visual() }}
+</section>
+
+<section class="section pricing-guardrails" aria-labelledby="pricing-guardrails-title">
+  <span class="eyebrow">{{ t('public.pricing.guardrails_eyebrow') }}</span>
+  <h2 id="pricing-guardrails-title">{{ t('public.pricing.guardrails_heading') }}</h2>
+  <div class="feature-grid three">
+    <article class="feature-card"><h3>{{ t('public.pricing.guardrail_trial_title') }}</h3><p>{{ t('public.pricing.guardrail_trial_body') }}</p></article>
+    <article class="feature-card"><h3>{{ t('public.pricing.guardrail_checkout_title') }}</h3><p>{{ t('public.pricing.guardrail_checkout_body') }}</p></article>
+    <article class="feature-card"><h3>{{ t('public.pricing.guardrail_pilot_title') }}</h3><p>{{ t('public.pricing.guardrail_pilot_body') }}</p></article>
+  </div>
+</section>
+
+{% if coupons %}
+<section class="section">
+  <div class="panel-list">
+    <h2>{{ t('public.pricing.offers_heading') }}</h2>
+    {% for coupon in coupons %}
+      <div class="list-row tall">
+        <span><bdi>{{ coupon.code }}</bdi></span>
+        <b><bdi>{{ coupon.discount_percent }}%</bdi> {{ t('public.pricing.off') }}</b>
+        <small><bdi dir="auto">{{ coupon.description }}</bdi> · {{ t('public.pricing.applies_to') }} <bdi>{{ tc(coupon.applies_to_plan) }}</bdi></small>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

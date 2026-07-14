@@ -1,0 +1,26 @@
+{
+  "img/brand/schoolmind-logo-concept.png": {
+    "webp": "img/brand/schoolmind-logo-concept.webp",
+    "width": 426,
+    "height": 362,
+    "purpose": "brand"
+  },
+  "img/pages/01_schoolmind_logo_concept.png": {
+    "webp": "img/pages/01_schoolmind_logo_concept.webp",
+    "width": 426,
+    "height": 362,
+    "purpose": "page-visual"
+  },
+  "img/pages/06_student_nour_ai_companion.png": {
+    "webp": "img/pages/06_student_nour_ai_companion.webp",
+    "width": 369,
+    "height": 312,
+    "purpose": "student-visual"
+  },
+  "img/pages/08_school_admin_operations.png": {
+    "webp": "img/pages/08_school_admin_operations.webp",
+    "width": 368,
+    "height": 350,
+    "purpose": "operations-visual"
+  }
+}

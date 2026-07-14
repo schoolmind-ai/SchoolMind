@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.settings.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.settings.title') }}</span>
+      <h1>{{ t('dashboard.settings.heading') }}</h1>
+      <p>{{ t('dashboard.settings.intro') }}</p>
+    </div>
+    <form class="pixel-form compact" method="post">
+      {% include "partials/form_csrf.html" %}
+      <div class="form-grid">
+        <label>{{ t('dashboard.settings.country') }}<input name="country" value="{{ school.country }}"></label>
+        <label>{{ t('dashboard.student.support_owner') }}<input name="support_owner" value="{{ settings.support_owner }}" placeholder="{{ t('dashboard.settings.owner_placeholder') }}"></label>
+        <label>{{ t('dashboard.settings.escalation_minutes') }}<input name="escalation_window_minutes" type="number" min="5" max="1440" value="{{ settings.escalation_window_minutes }}"></label>
+        <label>{{ t('dashboard.settings.retention_days') }}<input name="data_retention_days" type="number" min="30" max="3650" value="{{ settings.data_retention_days }}"></label>
+      </div>
+      <label class="inline-check"><input name="guardian_consent_required" type="checkbox" {% if settings.guardian_consent_required %}checked{% endif %}> {{ t('dashboard.settings.guardian_consent') }}</label>
+      <label>{{ t('dashboard.settings.escalation_instructions') }}<textarea name="emergency_instructions" rows="5">{{ settings.emergency_instructions }}</textarea></label>
+      <button class="btn primary" type="submit">{{ t('dashboard.settings.save') }}</button>
+    </form>
+    <div class="dash-grid two">
+      <form class="pixel-form compact danger-zone" method="post" action="{{ url_for('dashboard.admin_run_retention') }}" data-confirm="{{ t('dashboard.settings.cleanup_confirm') }}">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.settings.cleanup_title') }}</h2>
+        <p class="muted">{{ t('dashboard.settings.cleanup_body') }}</p>
+        <button class="btn ghost" type="submit">{{ t('dashboard.settings.cleanup_button') }}</button>
+      </form>
+      <div class="pixel-board wide">
+        <div class="board-row"><span>{{ t('dashboard.settings.backup_export') }}</span><b><a href="{{ url_for('api.export_workspace_json') }}">{{ t('dashboard.settings.download_json') }}</a></b></div>
+        <div class="board-row"><span>{{ t('dashboard.settings.retention_window') }}</span><b>{{ settings.data_retention_days }} {{ t('dashboard.backups.days') }}</b></div>
+        <div class="board-row"><span>{{ t('dashboard.settings.consent_requirement') }}</span><b>{{ t('dashboard.settings.on') if settings.guardian_consent_required else t('dashboard.settings.off') }}</b></div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

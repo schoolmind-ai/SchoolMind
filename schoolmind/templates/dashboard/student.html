@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.student.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.student.eyebrow') }}</span>
+      <h1>{{ t('dashboard.student.heading') }}</h1>
+      <p>{{ t('dashboard.student.support_owner') }}: <strong>{{ settings.support_owner or t('dashboard.student.support_team') }}</strong>. {{ t('dashboard.student.disclaimer') }}</p>
+    </div>
+
+    {% include "partials/role_command_center.html" %}
+
+    {% with title=t('dashboard.student.safety_title'), body=t('dashboard.student.safety_body') %}{% include "partials/ai_safety_notice.html" %}{% endwith %}
+
+    {% if not consent_ok %}
+      <div class="panel-list danger-zone">
+        <h2>{{ t('dashboard.student.consent_title') }}</h2>
+        <p class="muted">{{ t('dashboard.student.consent_body') }}</p>
+      </div>
+    {% endif %}
+
+    <div class="metric-strip">
+      <div class="metric-card {{ snapshot.level }}"><small>{{ t('dashboard.student.metric.wellbeing') }}</small><strong>{{ snapshot.score }}</strong><progress class="meter-progress" value="{{ snapshot.score }}" max="100">{{ snapshot.score }}%</progress></div>
+      <div class="metric-card"><small>{{ t('dashboard.student.metric.focus') }}</small><strong>{{ tc(snapshot.level) }}</strong><p class="muted">{{ tc(snapshot.headline) }}</p></div>
+      <div class="metric-card"><small>{{ t('dashboard.student.metric.active_plans') }}</small><strong>{{ snapshot.plan_count }}</strong><p class="muted">{{ t('dashboard.student.metric.plans_note') }}</p></div>
+      <div class="metric-card"><small>{{ t('dashboard.student.metric.recent_inputs') }}</small><strong>{{ snapshot.checkin_count + snapshot.journal_count }}</strong><p class="muted">{{ t('dashboard.student.metric.inputs_note') }}</p></div>
+    </div>
+
+    <div class="feature-grid four">
+      <a class="feature-card clickable" href="{{ url_for('dashboard.journal_studio') }}"><span class="pixel-icon">J</span><h3>{{ t('dashboard.student.feature.journal_title') }}</h3><p>{{ t('dashboard.student.feature.journal_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.student_goals') }}"><span class="pixel-icon">G</span><h3>{{ t('dashboard.student.feature.goals_title') }}</h3><p>{{ t('dashboard.student.feature.goals_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.progress_hub') }}"><span class="pixel-icon">R</span><h3>{{ t('dashboard.student.feature.progress_title') }}</h3><p>{{ t('dashboard.student.feature.progress_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.games') }}"><span class="pixel-icon">P</span><h3>{{ t('dashboard.student.feature.practice_title') }}</h3><p>{{ t('dashboard.student.feature.practice_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.weekly_summary') }}"><span class="pixel-icon">W</span><h3>{{ t('dashboard.student.feature.weekly_title') }}</h3><p>{{ t('dashboard.student.feature.weekly_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.support_plans') }}"><span class="pixel-icon">S</span><h3>{{ t('dashboard.student.feature.plans_title') }}</h3><p>{{ t('dashboard.student.feature.plans_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.breathing_center') }}"><span class="pixel-icon">B</span><h3>{{ t('dashboard.student.feature.breathing_title') }}</h3><p>{{ t('dashboard.student.feature.breathing_body') }}</p></a>
+    </div>
+
+    {% if latest_assessment %}
+      <div class="panel-list insight-panel">
+        <h2>{{ t('dashboard.student.latest_scan') }}</h2>
+        <div class="list-row tall">
+          <span>{{ tc(latest_assessment.primary_need|replace('_', ' ')|title) }}</span>
+          <b class="risk {{ latest_assessment.risk_level }}">{{ tc(latest_assessment.risk_level) }}</b>
+          <small>{{ tc(latest_assessment.recommendation) }}</small>
+          <small>{{ t('dashboard.common.score') }} {{ latest_assessment.score }} · {{ latest_assessment.created_at }}</small>
+        </div>
+      </div>
+    {% endif %}
+
+    <form class="pixel-form compact wellbeing-form {% if not consent_ok %}locked-section{% endif %}" method="post" action="{{ url_for('dashboard.student_assessment') }}">
+      {% include "partials/form_csrf.html" %}
+      <div>
+        <span class="eyebrow">{{ t('dashboard.student.studio.eyebrow') }}</span>
+        <h2>{{ t('dashboard.student.studio.title') }}</h2>
+        <p class="muted">{{ t('dashboard.student.studio.body') }}</p>
+      </div>
+      <div class="form-grid">
+        <label>{{ t('dashboard.student.field.mood') }}<select name="mood"><option value="5">5 {{ t('dashboard.student.value.strong') }}</option><option value="4">4 {{ t('dashboard.student.value.good') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.okay') }}</option><option value="2">2 {{ t('dashboard.student.value.low') }}</option><option value="1">1 {{ t('dashboard.student.value.hard') }}</option></select></label>
+        <label>{{ t('dashboard.student.field.stress') }}<select name="stress"><option value="1">1 {{ t('dashboard.student.value.low') }}</option><option value="2">2 {{ t('dashboard.student.value.mild') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.medium') }}</option><option value="4">4 {{ t('dashboard.student.value.high') }}</option><option value="5">5 {{ t('dashboard.student.value.very_high') }}</option></select></label>
+        <label>{{ t('dashboard.student.field.sleep') }}<select name="sleep"><option value="5">5 {{ t('dashboard.student.value.rested') }}</option><option value="4">4 {{ t('dashboard.student.value.mostly_rested') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.mixed') }}</option><option value="2">2 {{ t('dashboard.student.value.poor') }}</option><option value="1">1 {{ t('dashboard.student.value.exhausted') }}</option></select></label>
+        <label>{{ t('dashboard.student.field.belonging') }}<select name="belonging"><option value="5">5 {{ t('dashboard.student.value.connected') }}</option><option value="4">4 {{ t('dashboard.student.value.mostly_connected') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.unsure') }}</option><option value="2">2 {{ t('dashboard.student.value.isolated') }}</option><option value="1">1 {{ t('dashboard.student.value.very_isolated') }}</option></select></label>
+        <label>{{ t('dashboard.student.field.study_pressure') }}<select name="study_pressure"><option value="1">1 {{ t('dashboard.student.value.light') }}</option><option value="2">2 {{ t('dashboard.student.value.manageable') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.medium') }}</option><option value="4">4 {{ t('dashboard.student.value.heavy') }}</option><option value="5">5 {{ t('dashboard.student.value.too_heavy') }}</option></select></label>
+        <label>{{ t('dashboard.student.field.focus') }}<select name="focus"><option value="5">5 {{ t('dashboard.student.value.clear') }}</option><option value="4">4 {{ t('dashboard.student.value.good') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.mixed') }}</option><option value="2">2 {{ t('dashboard.student.value.scattered') }}</option><option value="1">1 {{ t('dashboard.student.value.very_hard') }}</option></select></label>
+        <label>{{ t('dashboard.student.field.safety') }}<select name="safety"><option value="5">5 {{ t('dashboard.student.value.safe') }}</option><option value="4">4 {{ t('dashboard.student.value.mostly_safe') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.unsure') }}</option><option value="2">2 {{ t('dashboard.student.value.not_safe_enough') }}</option><option value="1">1 {{ t('dashboard.student.value.immediate_help') }}</option></select></label>
+        <label>{{ t('dashboard.student.field.support_access') }}<select name="support_access"><option value="5">5 {{ t('dashboard.student.value.know_who') }}</option><option value="4">4 {{ t('dashboard.student.value.mostly_clear') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.not_sure') }}</option><option value="2">2 {{ t('dashboard.student.value.hard_to_ask') }}</option><option value="1">1 {{ t('dashboard.student.value.dont_know_who') }}</option></select></label>
+      </div>
+      <button class="btn primary" type="submit" {% if not consent_ok %}disabled{% endif %}>{{ t('dashboard.student.create_plan') }}</button>
+    </form>
+
+    <div class="dash-grid two">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.student.active_plans') }}</h2>
+        {% for plan in active_plans %}
+          <article class="list-row tall">
+            <span>{{ tc(plan.focus_area) }}</span>
+            <b>{{ tc(plan.status) }}</b>
+            <small>{{ tc(plan.goal) }}</small>
+            <small>{{ tc(plan.next_step) }} · {{ tc(plan.cadence) }}</small>
+          </article>
+        {% else %}<p class="muted">{{ t('dashboard.student.empty_plans') }}</p>{% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.student.scan_history') }}</h2>
+        {% for item in assessments %}
+          <div class="list-row tall"><span>{{ tc(item.primary_need|replace('_', ' ')|title) }}</span><b class="risk {{ item.risk_level }}">{{ item.score }}</b><small>{{ tc(item.recommendation) }}</small></div>
+        {% else %}<p class="muted">{{ t('dashboard.student.empty_scans') }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <div class="dash-grid two {% if not consent_ok %}locked-section{% endif %}">
+      <form class="pixel-form compact" method="post" action="{{ url_for('dashboard.student_checkin') }}">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.student.checkin.title') }}</h2>
+        <label>{{ t('dashboard.student.field.mood') }}<select name="mood"><option value="5">5 {{ t('dashboard.student.value.great') }}</option><option value="4">4 {{ t('dashboard.student.value.good') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.okay') }}</option><option value="2">2 {{ t('dashboard.student.value.low') }}</option><option value="1">1 {{ t('dashboard.student.value.hard') }}</option></select></label>
+        <label>{{ t('dashboard.student.field.stress') }}<select name="stress"><option value="1">1 {{ t('dashboard.student.value.low') }}</option><option value="2">2 {{ t('dashboard.student.value.mild') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.medium') }}</option><option value="4">4 {{ t('dashboard.student.value.high') }}</option><option value="5">5 {{ t('dashboard.student.value.very_high') }}</option></select></label>
+        <label>{{ t('dashboard.student.field.energy') }}<select name="energy"><option value="5">5 {{ t('dashboard.student.value.strong') }}</option><option value="4">4 {{ t('dashboard.student.value.good') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.okay') }}</option><option value="2">2 {{ t('dashboard.student.value.tired') }}</option><option value="1">1 {{ t('dashboard.student.value.drained') }}</option></select></label>
+        <label>{{ t('dashboard.student.checkin.optional_note') }}<textarea name="note" rows="3"></textarea></label>
+        <button class="btn primary" type="submit" {% if not consent_ok %}disabled{% endif %}>{{ t('dashboard.student.checkin.save') }}</button>
+      </form>
+      <form class="pixel-form compact" method="post" action="{{ url_for('dashboard.student_journal') }}">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.student.journal.title') }}</h2>
+        <label>{{ t('dashboard.student.journal.note') }}<textarea name="body" rows="9" placeholder="{{ t('dashboard.student.journal.placeholder') }}"></textarea></label>
+        <button class="btn primary" type="submit" {% if not consent_ok %}disabled{% endif %}>{{ t('dashboard.student.journal.save') }}</button>
+      </form>
+    </div>
+
+    <div class="dash-grid two">
+      <form class="pixel-form compact" method="post" action="{{ url_for('dashboard.student_support') }}">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.student.request.title') }}</h2>
+        <label>{{ t('dashboard.student.request.topic') }}<input name="topic" placeholder="{{ t('dashboard.student.request.topic_placeholder') }}"></label>
+        <label>{{ t('dashboard.student.request.message') }}<textarea name="message" rows="4" required></textarea></label>
+        <button class="btn ghost" type="submit" {% if not consent_ok %}disabled{% endif %}>{{ t('dashboard.student.request.send') }}</button>
+      </form>
+      <form class="pixel-form compact" method="post" action="{{ url_for('dashboard.student_companion') }}">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.student.nour.title') }}</h2>
+        <p class="muted">{{ t('dashboard.student.nour.body') }}</p>
+        <label>{{ t('dashboard.student.request.message') }}<textarea name="message" rows="4" placeholder="{{ t('dashboard.student.nour.placeholder') }}"></textarea></label>
+        <button class="btn ghost" type="submit" {% if not consent_ok %}disabled{% endif %}>{{ t('dashboard.student.nour.ask') }}</button>
+      </form>
+    </div>
+
+    <div class="dash-grid two">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.student.recent_signals') }}</h2>
+        {% for checkin in checkins %}
+          <div class="list-row"><span>{{ t('dashboard.student.checkin.label') }}</span><b class="risk {{ checkin.risk_level }}">{{ tc(checkin.risk_level) }}</b><small>{{ checkin.created_at }}</small></div>
+        {% else %}<p class="muted">{{ t('dashboard.student.empty_checkins') }}</p>{% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.student.support_requests') }}</h2>
+        {% for item in requests %}
+          <div class="list-row tall"><span><bdi dir="auto">{{ item.topic }}</bdi></span><b>{{ tc(item.status) }}</b><small><bdi dir="auto">{{ item.message }}</bdi></small></div>
+        {% else %}<p class="muted">{{ t('dashboard.student.empty_requests') }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <div class="panel-list">
+      <h2>{{ t('dashboard.student.journal_history') }}</h2>
+      {% for journal in journals %}
+        <article class="list-row tall"><span><bdi dir="auto">{{ journal.body }}</bdi></span><b class="risk {{ journal.risk_level }}">{{ tc(journal.risk_level) }}</b><small>{{ tc(journal.ai_summary) }}</small></article>
+      {% else %}<p class="muted">{{ t('dashboard.student.empty_journals') }}</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.counselor.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.counselor.eyebrow') }}</span>
+      <h1>{{ t('dashboard.counselor.heading') }}</h1>
+      <p>{{ overdue_count }} {{ t('dashboard.counselor.overdue_prefix') }} {{ settings.escalation_window_minutes }} {{ t('dashboard.counselor.overdue_suffix') }}</p>
+    </div>
+
+    {% include "partials/role_command_center.html" %}
+
+    {% with title=t('dashboard.counselor.safety_title'), body=t('dashboard.counselor.safety_body') %}{% include "partials/ai_safety_notice.html" %}{% endwith %}
+
+    <div class="metric-strip">
+      <div class="metric-card {{ 'urgent' if overdue_count else 'steady' }}"><small>{{ t('dashboard.counselor.metric.overdue') }}</small><strong>{{ overdue_count }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.counselor.metric.open_alerts') }}</small><strong>{{ alerts|length }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.counselor.metric.requests') }}</small><strong>{{ requests|length }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.counselor.metric.students') }}</small><strong>{{ students|length }}</strong></div>
+    </div>
+
+    <div class="panel-list">
+      <h2>{{ t('dashboard.counselor.focus_queue') }}</h2>
+      {% for item in focus_rows %}
+        <a class="list-row tall clickable" href="{{ url_for('dashboard.counselor_student', user_id=item.id) }}">
+          <span>{{ item.name }} · {{ item.group_name or t('dashboard.common.unassigned') }}</span>
+          {% if item.risk_level %}
+            <b class="risk {{ item.risk_level }}">{{ tc(item.risk_level) }} · {{ item.score }}</b>
+            <small>{{ tc(item.primary_need|replace('_', ' ')|title) }} · {{ tc(item.recommendation) }}</small>
+          {% else %}
+            <b>{{ t('dashboard.common.no_scan') }}</b>
+            <small>{{ t('dashboard.counselor.ask_for_scan') }}</small>
+          {% endif %}
+        </a>
+      {% else %}<p class="muted">{{ t('dashboard.counselor.empty_students') }}</p>{% endfor %}
+    </div>
+
+    <div class="dash-grid two">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.counselor.open_alerts') }}</h2>
+        {% for alert in alerts %}
+          <article class="list-row tall case-card {{ 'danger-zone' if alert.age_minutes >= settings.escalation_window_minutes else '' }}">
+            <span><a href="{{ url_for('dashboard.counselor_student', user_id=alert.student_id) }}">{{ alert.student_name }} · {{ alert.title }}</a></span>
+            <b class="risk {{ alert.risk_level }}">{{ tc(alert.risk_level) }}</b>
+            <small><bdi dir="auto">{{ alert.detail }}</bdi></small>
+            <small>{{ t('dashboard.common.age') }}: {{ alert.age_minutes or 0 }} {{ t('dashboard.common.minutes_short') }} · {{ t('dashboard.common.assigned') }}: {{ alert.assigned_name or t('dashboard.common.unassigned') }}</small>
+            <div class="case-actions">
+              <form method="post" action="{{ url_for('dashboard.counselor_alert_action', event_id=alert.id) }}">
+                {% include "partials/form_csrf.html" %}
+                <input type="hidden" name="action" value="assigned">
+                <button class="btn ghost" type="submit">{{ t('dashboard.counselor.assign_me') }}</button>
+              </form>
+              <form method="post" action="{{ url_for('dashboard.counselor_alert_action', event_id=alert.id) }}">
+                {% include "partials/form_csrf.html" %}
+                <input type="hidden" name="action" value="closed">
+                <label><span class="sr-only">{{ t('dashboard.counselor.closure_note') }}</span><input name="note" aria-label="{{ t('dashboard.counselor.closure_note') }}" placeholder="{{ t('dashboard.counselor.closure_note') }}" required></label>
+                <button class="btn ghost" type="submit">{{ t('dashboard.counselor.close') }}</button>
+              </form>
+            </div>
+          </article>
+        {% else %}<p class="muted">{{ t('dashboard.counselor.empty_alerts') }}</p>{% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.counselor.support_requests') }}</h2>
+        {% for item in requests %}
+          <div class="list-row tall"><span>{{ item.student_name }} · <bdi dir="auto">{{ item.topic }}</bdi></span><b>{{ tc(item.status) }}</b><small><bdi dir="auto">{{ item.message }}</bdi></small></div>
+        {% else %}<p class="muted">{{ t('dashboard.counselor.empty_requests') }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <div class="dash-grid two">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.counselor.students') }}</h2>
+        {% for student in students %}
+          <a class="list-row clickable" href="{{ url_for('dashboard.counselor_student', user_id=student.id) }}">
+            <span>{{ student.name }} · {{ student.group_name or t('dashboard.common.unassigned') }}</span>
+            <b>{{ student.open_events or 0 }} {{ t('dashboard.common.open') }}</b>
+            <small>{{ student.email }}</small>
+          </a>
+        {% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.counselor.playbook_preview') }}</h2>
+        {% for item in playbooks[:3] %}
+          <article class="list-row tall"><span>{{ item.title }}</span><b class="risk {{ item.trigger_level }}">{{ item.trigger_level }}</b><small>{{ item.action_steps }}</small></article>
+        {% else %}<p class="muted">{{ t('dashboard.counselor.empty_playbooks') }}</p>{% endfor %}
+        <a class="btn ghost" href="{{ url_for('dashboard.counselor_playbooks') }}">{{ t('dashboard.counselor.manage_playbooks') }}</a>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

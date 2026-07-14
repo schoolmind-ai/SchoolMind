@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.incident.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact legal-hero">
+  <span class="eyebrow">{{ t('public.incident.eyebrow') }}</span>
+  <h1>{{ t('public.incident.heading') }}</h1>
+  <p class="lead">{{ t('public.incident.lead') }}</p>
+  <p class="legal-note">{{ t('public.legal_notice') }}</p>
+</section>
+
+<section class="section policy-section">
+  <div>
+    <span class="eyebrow">{{ t('public.incident.workflow_eyebrow') }}</span>
+    <h2>{{ t('public.incident.workflow_heading') }}</h2>
+    <p class="lead">{{ t('public.incident.workflow_body') }}</p>
+  </div>
+  <div class="company-grid one legal-flow">
+    {% for step in incident_steps %}
+      <article class="company-card policy-card"><h3>{{ t('public.incident.step_' ~ loop.index ~ '_title') }}</h3><p>{{ t('public.incident.step_' ~ loop.index ~ '_body') }}</p></article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section table-card legal-table">
+  <span class="eyebrow">{{ t('public.incident.before_eyebrow') }}</span>
+  <h2>{{ t('public.incident.before_heading') }}</h2>
+  <table>
+    <caption class="sr-only">{{ t('public.incident.table_caption') }}</caption>
+    <thead><tr><th scope="col">{{ t('public.incident.table_requirement') }}</th><th scope="col">{{ t('public.incident.table_status') }}</th></tr></thead>
+    <tbody>
+      {% for row in ('owner', 'providers', 'backup', 'notification') %}
+      <tr><td>{{ t('public.incident.' ~ row ~ '_requirement') }}</td><td>{{ t('public.incident.' ~ row ~ '_status') }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

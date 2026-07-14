@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "partials/ui_macros.html" import workspace_visual %}
+{% block title %}{{ t('public.demo.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.demo.eyebrow') }}</span>
+  <h1>{{ t('public.demo.heading') }}</h1>
+  <p class="lead">{{ t('public.demo.lead') }}</p>
+</section>
+<section class="limited-demo-banner">
+  <div>
+    <h2>{{ t('public.demo.fast_heading') }}</h2>
+    <span>{{ t('public.demo.fast_body') }}</span>
+  </div>
+  <a class="btn primary" href="{{ url_for('public.try_demo') }}">{{ t('public.demo.open_instant') }}</a>
+</section>
+<section class="feature-grid four">
+  {% for account in demo_accounts %}
+  <form class="feature-card role-entry-card" action="{{ url_for('public.instant_experience', role=account.key) }}" method="post">
+    {% include "partials/form_csrf.html" %}
+    <span class="pixel-icon">{{ loop.index }}</span>
+    <h3>{{ t('role.' ~ account.key) }}</h3>
+    <p>{{ t('public.demo.open_role_prefix') }} {{ t('role.' ~ account.key) }} {{ t('public.demo.open_role_suffix') }}</p>
+    <button class="btn primary" type="submit">{{ t('public.demo.enter_as') }} {{ t('role.' ~ account.key) }}</button>
+  </form>
+  {% endfor %}
+</section>
+<section class="section company-split">
+  {{ workspace_visual() }}
+  <div>
+    <span class="eyebrow">{{ t('public.demo.limits_eyebrow') }}</span>
+    <h2>{{ t('public.demo.limits_heading') }}</h2>
+    <p class="lead">{{ t('public.demo.limits_body') }}</p>
+    <ul class="company-list">
+      <li>{{ t('public.demo.limit_1') }}</li>
+      <li>{{ t('public.demo.limit_2') }}</li>
+      <li>{{ t('public.demo.limit_3') }}</li>
+      <li>{{ t('public.demo.limit_4') }}</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

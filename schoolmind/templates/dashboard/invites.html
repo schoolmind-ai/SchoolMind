@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.invites.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.invites.eyebrow') }}</span>
+      <h1>{{ t('dashboard.invites.heading') }}</h1>
+      <p>{{ t('dashboard.invites.intro') }}</p>
+    </div>
+    <div class="dash-grid two">
+      <form class="pixel-form compact" method="post">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.invites.create') }}</h2>
+        <label>{{ t('dashboard.account.email') }}<input name="email" type="email" required></label>
+        <label>{{ t('dashboard.account.role') }}<select name="role">{% for role in roles %}<option value="{{ role }}">{{ t('role.' ~ role) }}</option>{% endfor %}</select></label>
+        <label>{{ t('dashboard.invites.group') }}<input name="group_name" placeholder="{{ t('dashboard.invites.group_placeholder') }}"></label>
+        <button class="btn primary" type="submit">{{ t('dashboard.invites.queue') }}</button>
+      </form>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.invites.recent') }}</h2>
+        {% for invite in invites %}
+          <div class="list-row tall"><span><bdi>{{ invite.email }}</bdi> · {{ t('role.' ~ invite.role) }}</span><b>{{ tc(invite.status) }}</b><small>{{ t('dashboard.invites.expires') }} {{ invite.expires_at }} · {{ invite.group_name or t('dashboard.common.no_group') }}</small></div>
+        {% else %}<p class="muted">{{ t('dashboard.invites.empty') }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="panel-list">
+      <h2>{{ t('dashboard.invites.outbox') }}</h2>
+      {% for item in outbox %}
+        <div class="list-row tall"><span><bdi>{{ item.recipient }}</bdi> · <bdi dir="auto">{{ item.subject }}</bdi></span><b>{{ tc(item.status) }}</b><small><bdi dir="auto">{{ item.body }}</bdi></small></div>
+      {% else %}<p class="muted">{{ t('dashboard.invites.empty_outbox') }}</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

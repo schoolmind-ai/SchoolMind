@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% block title %}{{ t('home.title') }}{% endblock %}
+{% block body_class %}public-home{% endblock %}
+{% block head_extra %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="home-page" id="main-public-home" data-public-home>
+  <section class="home-hero" aria-labelledby="home-hero-title">
+    <div class="home-container">
+      <div class="home-hero-grid">
+        <div class="home-hero-copy">
+          <div class="home-badge"><span aria-hidden="true">✦</span>{{ t('home.badge') }}</div>
+          {% set default_hero_title = 'A student support operating system for schools.' %}
+          {% set custom_hero = site_settings.hero_title and site_settings.hero_title != default_hero_title %}
+          {% if custom_hero %}
+            <h1 id="home-hero-title" class="home-custom-title"><span>{{ site_settings.hero_title }}</span></h1>
+            <p>{{ site_settings.hero_subtitle or t('home.hero.subtitle') }}</p>
+          {% else %}
+            <h1 id="home-hero-title">
+              <span>{{ t('home.hero.line_one') }}</span>
+              <strong>{{ t('home.hero.line_two') }}</strong>
+            </h1>
+            <p>{{ t('home.hero.subtitle') }}</p>
+          {% endif %}
+          <div class="home-actions">
+            <a class="home-button home-button-primary" href="{{ url_for('auth.start', plan='starter') }}">{{ t('home.cta.start_trial') }} <span aria-hidden="true">→</span></a>
+            <a class="home-button home-button-secondary" href="{{ url_for('public.request_demo') }}"><span aria-hidden="true">▣</span>{{ t('home.cta.book_demo') }}</a>
+          </div>
+        </div>
+
+        <div class="home-dashboard-shell" aria-label="{{ t('home.dashboard.aria') }}">
+          <div class="home-dashboard">
+            <aside class="home-dashboard-sidebar" aria-hidden="true">
+              <div class="home-dashboard-brand"><span>SM</span><b>SchoolMind <em>AI</em></b></div>
+              <div class="home-dashboard-nav">
+                <span class="is-active">◈ {{ t('home.dashboard.overview') }}</span>
+                <span>○ {{ t('home.dashboard.students') }}</span>
+                <span>◇ {{ t('home.dashboard.checkins') }}</span>
+                <span>△ {{ t('home.dashboard.counselors') }}</span>
+                <span>▦ {{ t('home.dashboard.classes') }}</span>
+                <span>▤ {{ t('home.dashboard.reports') }}</span>
+                <span>◌ {{ t('home.dashboard.alerts') }}</span>
+                <span>◎ {{ t('home.dashboard.resources') }}</span>
+                <span>⚙ {{ t('home.dashboard.settings') }}</span>
+              </div>
+            </aside>
+
+            <div class="home-dashboard-main">
+              <div class="home-dashboard-header">
+                <div><strong>{{ t('home.dashboard.welcome') }}</strong><small>{{ t('home.dashboard.subtitle') }}</small></div>
+                <div class="home-dashboard-controls"><span>{{ t('home.dashboard.week') }}</span><span>{{ t('home.dashboard.export') }}</span></div>
+              </div>
+
+              <div class="home-dashboard-kpis">
+                <article class="dashboard-kpi dashboard-kpi-blue">
+                  <small>{{ t('home.dashboard.wellbeing') }}</small><b>82%</b><span>{{ t('home.dashboard.good') }}</span><i aria-hidden="true"></i>
+                </article>
+                <article class="dashboard-kpi dashboard-kpi-red">
+                  <small>{{ t('home.dashboard.signals') }}</small><b>5</b><span>{{ t('home.dashboard.human_review') }}</span><i aria-hidden="true"></i>
+                </article>
+                <article class="dashboard-kpi dashboard-kpi-green">
+                  <small>{{ t('home.dashboard.engagement') }}</small><b>78%</b><span>{{ t('home.dashboard.good') }}</span><i aria-hidden="true"></i>
+                </article>
+                <article class="dashboard-kpi dashboard-kpi-purple">
+                  <small>{{ t('home.dashboard.checkins') }}</small><b>3.2K</b><span>{{ t('home.dashboard.sample') }}</span><i aria-hidden="true"></i>
+                </article>
+              </div>
+
+              <div class="home-dashboard-lower">
+                <article class="dashboard-chart">
+                  <div class="dashboard-panel-title"><span>{{ t('home.dashboard.trends') }}</span><b>82%</b></div>
+                  <div class="dashboard-chart-plot" aria-hidden="true">
+                    <span class="chart-grid chart-grid-one"></span><span class="chart-grid chart-grid-two"></span><span class="chart-grid chart-grid-three"></span>
+                    <svg viewBox="0 0 420 130" preserveAspectRatio="none" focusable="false" role="presentation">
+                      <defs><linearGradient id="homeTrend" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2563eb"/><stop offset="0.55" stop-color="#22d3ee"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+                      <path class="chart-area" d="M0 108 L38 92 L76 98 L114 66 L152 82 L190 52 L228 69 L266 38 L304 61 L342 35 L380 48 L420 23 L420 130 L0 130 Z"/>
+                      <path class="chart-line" d="M0 108 L38 92 L76 98 L114 66 L152 82 L190 52 L228 69 L266 38 L304 61 L342 35 L380 48 L420 23"/>
+                    </svg>
+                  </div>
+                  <div class="dashboard-days" aria-hidden="true"><span>{{ t('home.weekday.mon') }}</span><span>{{ t('home.weekday.tue') }}</span><span>{{ t('home.weekday.wed') }}</span><span>{{ t('home.weekday.thu') }}</span><span>{{ t('home.weekday.fri') }}</span><span>{{ t('home.weekday.sat') }}</span><span>{{ t('home.weekday.sun') }}</span></div>
+                </article>
+
+                <article class="dashboard-indicators">
+                  <div class="dashboard-panel-title"><span>{{ t('home.dashboard.indicators') }}</span></div>
+                  <div class="indicator-row indicator-42"><span>{{ t('home.dashboard.anxiety') }}</span><i><b></b></i><em>42%</em></div>
+                  <div class="indicator-row indicator-38"><span>{{ t('home.dashboard.stress') }}</span><i><b></b></i><em>38%</em></div>
+                  <div class="indicator-row indicator-65"><span>{{ t('home.dashboard.motivation') }}</span><i><b></b></i><em>65%</em></div>
+                  <div class="indicator-row indicator-72"><span>{{ t('home.dashboard.engagement') }}</span><i><b></b></i><em>72%</em></div>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-hologram" aria-hidden="true">
+            <div class="hologram-orbit hologram-orbit-one"></div><div class="hologram-orbit hologram-orbit-two"></div>
+            <div class="hologram-avatar">
+              <span class="hologram-head"></span><span class="hologram-body"></span>
+              <span class="hologram-arm hologram-arm-left"></span><span class="hologram-arm hologram-arm-right"></span>
+              <span class="hologram-leg hologram-leg-left"></span><span class="hologram-leg hologram-leg-right"></span>
+            </div>
+            <div class="hologram-platform"><span></span></div>
+            <div class="hologram-particles"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+
+          <div class="home-ai-card">
+            <strong>✓ {{ t('home.dashboard.ai_insights') }}</strong>
+            <span>{{ t('home.dashboard.realtime') }}</span>
+            <span>{{ t('home.dashboard.review_queued') }}</span>
+            <span>{{ t('home.dashboard.privacy') }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-trust-notes" aria-label="{{ t('home.trust.privacy_first') }}">
+        <span><i aria-hidden="true">▣</i>{{ t('home.trust.no_credit_card') }}</span>
+        <span><i aria-hidden="true">◷</i>{{ t('home.trust.30_day_trial') }}</span>
+        <span><i aria-hidden="true">◎</i>{{ t('home.trust.human_review') }}</span>
+        <span><i aria-hidden="true">◇</i>{{ t('home.trust.privacy_first') }}</span>
+      </div>
+    </div>
+  </section>
+
+  {% set metrics = [
+    ('82%', 'home.metrics.wellbeing', 'pulse'),
+    ('5', 'home.metrics.signals', 'signal'),
+    ('12', 'home.metrics.reports', 'report'),
+    ('3.2K', 'home.metrics.checkins', 'checkin'),
+    ('98%', 'home.metrics.feedback', 'feedback')
+  ] %}
+  <section class="home-section home-metrics-section" aria-label="{{ t('home.metrics.wellbeing') }}">
+    <div class="home-container home-metrics">
+      {% for value, label_key, icon in metrics %}
+        <article class="home-metric home-metric-{{ icon }}"><span class="home-metric-icon" aria-hidden="true"></span><div><strong>{{ value }}</strong><small>{{ t(label_key) }}</small></div></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% set features = [
+    ('student', '◎', 'home.feature.student.title', 'home.feature.student.body'),
+    ('counselor', '◇', 'home.feature.counselor.title', 'home.feature.counselor.body'),
+    ('classroom', '△', 'home.feature.classroom.title', 'home.feature.classroom.body'),
+    ('reports', '▦', 'home.feature.reports.title', 'home.feature.reports.body'),
+    ('parents', '◌', 'home.feature.parents.title', 'home.feature.parents.body'),
+    ('admin', '⚙', 'home.feature.admin.title', 'home.feature.admin.body')
+  ] %}
+  <section class="home-section home-features-section" aria-labelledby="features-title">
+    <div class="home-container">
+      <div class="home-section-heading"><span>{{ t('home.features.eyebrow') }}</span><h2 id="features-title">{{ t('home.features.title') }}</h2><p>{{ t('home.features.subtitle') }}</p></div>
+      <div class="home-features-grid">
+        {% for accent, symbol, title_key, body_key in features %}
+          <article class="home-feature-card home-accent-{{ accent }}">
+            <div class="home-card-visual" aria-hidden="true"><span>{{ symbol }}</span><i></i><i></i><i></i></div>
+            <h3>{{ t(title_key) }}</h3><p>{{ t(body_key) }}</p>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {% set roles = [
+    ('students', '◈', 'home.role.students.title', 'home.role.students.body', 'public.students'),
+    ('teachers', '△', 'home.role.teachers.title', 'home.role.teachers.body', 'public.teachers'),
+    ('counselors', '◇', 'home.role.counselors.title', 'home.role.counselors.body', 'public.counselors'),
+    ('leaders', '▦', 'home.role.leaders.title', 'home.role.leaders.body', 'public.schools'),
+    ('parents', '○', 'home.role.parents.title', 'home.role.parents.body', 'public.request_demo')
+  ] %}
+  <section class="home-section home-roles-section" aria-labelledby="roles-title">
+    <div class="home-container">
+      <div class="home-section-heading home-section-heading-centered"><span>{{ t('home.roles.eyebrow') }}</span><h2 id="roles-title">{{ t('home.roles.title') }}</h2><p>{{ t('home.roles.subtitle') }}</p></div>
+      <div class="home-roles-grid">
+        {% for accent, symbol, title_key, body_key, endpoint in roles %}
+          <article class="home-role-card home-role-{{ accent }}"><span class="home-role-icon" aria-hidden="true">{{ symbol }}</span><h3>{{ t(title_key) }}</h3><p>{{ t(body_key) }}</p><a href="{{ url_for(endpoint) }}">{{ t('home.roles.explore') }} <span aria-hidden="true">→</span></a></article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section home-security-section" aria-labelledby="security-title">
+    <div class="home-container home-security-panel">
+      <div class="home-security-visual" aria-hidden="true"><div class="security-orbit"></div><div class="security-shield"><span></span></div><div class="security-platform"></div></div>
+      <div class="home-security-copy"><span class="home-kicker">{{ t('home.trust.privacy_first') }}</span><h2 id="security-title">{{ t('home.security.title') }}</h2><p>{{ t('home.security.body') }}</p>
+        <div class="home-security-badges"><span>◇ {{ t('home.security.ferpa') }}</span><span>◇ {{ t('home.security.coppa') }}</span><span>◇ {{ t('home.security.gdpr') }}</span><span>◇ {{ t('home.security.soc2') }}</span></div>
+        <small>{{ t('home.security.disclaimer') }}</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section home-demo-section" aria-labelledby="demo-title">
+    <div class="home-container home-demo-panel">
+      <div class="home-demo-icon" aria-hidden="true"><span>▶</span></div>
+      <div class="home-demo-copy"><h2 id="demo-title">{{ t('home.demo.title') }}</h2><p>{{ t('home.demo.body') }}</p></div>
+      <div class="home-demo-actions"><a class="home-button home-button-secondary" href="{{ url_for('public.request_demo') }}">{{ t('home.cta.book_demo') }}</a><a class="home-button home-button-primary" href="{{ url_for('auth.start', plan='starter') }}">{{ t('home.cta.start_trial') }} <span aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
+
+  {% set standard = plans['starter'] %}{% set pro = plans['growth'] %}
+  {% set standard_features = ['home.pricing.standard.checkins','home.pricing.standard.classroom','home.pricing.standard.counselor','home.pricing.standard.consent','home.pricing.standard.reports','home.pricing.standard.email'] %}
+  {% set pro_features = ['home.pricing.pro.standard','home.pricing.pro.workflows','home.pricing.pro.analytics','home.pricing.pro.roles','home.pricing.pro.csv','home.pricing.pro.support'] %}
+  <section class="home-section home-pricing-section" aria-labelledby="pricing-title">
+    <div class="home-container">
+      <div class="home-section-heading home-section-heading-centered"><span>{{ t('home.pricing.eyebrow') }}</span><h2 id="pricing-title">{{ t('home.pricing.title') }}</h2><p>{{ t('home.pricing.subtitle') }}</p></div>
+      <div class="home-pricing-grid">
+        <article class="home-price-card" aria-label="{{ t('home.pricing.standard_name') }}">
+          <div class="home-price-head"><div><span class="home-kicker">{{ t('home.pricing.standard_name') }}</span><h3>{{ t('home.pricing.standard_tagline') }}</h3></div></div>
+          <div class="home-price-options"><div><strong>${{ '%.2f'|format(standard.price)|replace('.00','') }}</strong><span>{{ t('home.pricing.per_month') }}</span></div><div><strong>${{ '%.2f'|format(standard.six_month_price)|replace('.00','') }}</strong><span>{{ t('home.pricing.per_six_months') }}</span></div><div><strong>${{ '%.2f'|format(standard.annual_price)|replace('.00','') }}</strong><span>{{ t('home.pricing.per_year') }}</span></div></div>
+          <p class="home-price-limit">{{ t('home.pricing.standard_limit') }} · {{ t('home.pricing.trial') }}</p>
+          <ul><li>{{ t('home.pricing.trial') }}</li>{% for key in standard_features %}<li>{{ t(key) }}</li>{% endfor %}</ul>
+          <a class="home-button home-button-secondary" href="{{ url_for('auth.start', plan='starter') }}">{{ t('home.cta.start_trial') }}</a>
+        </article>
+        <article class="home-price-card home-price-featured" aria-label="{{ t('home.pricing.pro_name') }}">
+          <span class="home-popular">{{ t('home.pricing.most_popular') }}</span>
+          <div class="home-price-head"><div><span class="home-kicker">{{ t('home.pricing.pro_name') }}</span><h3>{{ t('home.pricing.pro_tagline') }}</h3></div></div>
+          <div class="home-price-options"><div><strong>${{ '%.2f'|format(pro.price)|replace('.00','') }}</strong><span>{{ t('home.pricing.per_month') }}</span></div><div><strong>${{ '%.2f'|format(pro.six_month_price)|replace('.00','') }}</strong><span>{{ t('home.pricing.per_six_months') }}</span></div><div><strong>${{ '%.2f'|format(pro.annual_price)|replace('.00','') }}</strong><span>{{ t('home.pricing.per_year') }}</span></div></div>
+          <p class="home-price-limit">{{ t('home.pricing.pro_limit') }} · {{ t('home.pricing.trial') }}</p>
+          <ul><li>{{ t('home.pricing.trial') }}</li>{% for key in pro_features %}<li>{{ t(key) }}</li>{% endfor %}</ul>
+          <a class="home-button home-button-primary" href="{{ url_for('auth.start', plan='growth') }}">{{ t('home.cta.start_trial') }} <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section home-final-section" aria-labelledby="final-title">
+    <div class="home-container home-final-panel"><div><span class="home-kicker">{{ t('home.final.kicker') }}</span><h2 id="final-title">{{ t('home.final.title_new') }}</h2><p>{{ t('home.final.body_new') }}</p></div><div class="home-final-actions"><a class="home-button home-button-primary" href="{{ url_for('public.try_demo') }}">{{ t('nav.try_instantly') }}</a><a class="home-button home-button-secondary" href="{{ url_for('auth.start', plan='starter') }}">{{ t('home.cta.start_trial') }}</a></div></div>
+  </section>
+</div>
+{% endblock %}

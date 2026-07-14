@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.schools.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.schools.eyebrow') }}</span>
+  <h1>{{ t('public.schools.heading') }}</h1>
+  <p class="lead">{{ t('public.schools.lead') }}</p>
+  <div class="hero-actions"><a class="btn primary" href="{{ url_for('public.demo') }}">{{ t('public.common.try_limited_demo') }}</a><a class="btn ghost" href="{{ url_for('public.pilot') }}">{{ t('public.common.plan_guided_pilot') }}</a></div>
+</section>
+<section class="section company-split">
+  <div>
+    <span class="eyebrow">{{ t('public.schools.outcomes_eyebrow') }}</span>
+    <h2>{{ t('public.schools.outcomes_heading') }}</h2>
+    <ul class="company-list">
+      <li>{{ t('public.schools.outcome_1') }}</li>
+      <li>{{ t('public.schools.outcome_2') }}</li>
+      <li>{{ t('public.schools.outcome_3') }}</li>
+      <li>{{ t('public.schools.outcome_4') }}</li>
+    </ul>
+  </div>
+  <div class="company-image"><picture class="smart-picture"><source srcset="{{ url_for('static', filename='img/pages/08_school_admin_operations.webp') }}" type="image/webp"><img src="{{ url_for('static', filename='img/pages/08_school_admin_operations.png') }}" alt="{{ t('public.schools.image_alt') }}" loading="lazy" decoding="async" width="368" height="350"></picture></div>
+</section>
+<section class="section phase-grid">
+  <article class="company-card"><span class="pixel-icon">01</span><h3>{{ t('public.schools.readiness_title') }}</h3><p>{{ t('public.schools.readiness_body') }}</p></article>
+  <article class="company-card"><span class="pixel-icon">02</span><h3>{{ t('public.schools.data_title') }}</h3><p>{{ t('public.schools.data_body') }}</p></article>
+  <article class="company-card"><span class="pixel-icon">03</span><h3>{{ t('public.schools.workflow_title') }}</h3><p>{{ t('public.schools.workflow_body') }}</p></article>
+</section>
+{% endblock %}

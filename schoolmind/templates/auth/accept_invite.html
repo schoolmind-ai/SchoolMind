@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ t('auth.invite.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+  <form class="pixel-form" method="post">
+    {% include "partials/form_csrf.html" %}
+    <span class="eyebrow">{{ t('auth.invite.eyebrow') }}</span>
+    <h1>{{ t('auth.invite.join') }} {{ invite.school_name }}</h1>
+    <p class="muted">{{ t('auth.invite.email') }}: {{ invite.email }} · {{ t('auth.invite.role') }}: {{ t('role.' ~ invite.role) }}</p>
+    <label>{{ t('auth.invite.your_name') }}<input name="name" required></label>
+    <label>{{ t('auth.common.password') }}<input name="password" type="password" minlength="8" required></label>
+    <label class="inline-check"><input type="checkbox" name="accept_terms" required> {{ t('auth.invite.accept_terms') }}</label>
+    <button class="btn primary" type="submit">{{ t('auth.invite.submit') }}</button>
+  </form>
+</section>
+{% endblock %}

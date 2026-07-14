@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "partials/ui_macros.html" import trust_visual %}
+{% block title %}{{ t('public.retention.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.retention.eyebrow') }}</span>
+  <h1>{{ t('public.retention.heading') }}</h1>
+  <p class="lead">{{ t('public.retention.lead') }}</p>
+</section>
+<section class="section company-split">
+  <div>
+    <h2>{{ t('public.retention.posture_heading') }}</h2>
+    <ul class="company-list">
+      <li>{{ t('public.retention.point_1') }}</li>
+      <li>{{ t('public.retention.point_2') }}</li>
+      <li>{{ t('public.retention.point_3') }}</li>
+      <li>{{ t('public.retention.point_4') }}</li>
+    </ul>
+  </div>
+  {{ trust_visual() }}
+</section>
+{% endblock %}

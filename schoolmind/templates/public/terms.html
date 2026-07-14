@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.terms.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact legal-hero">
+  <span class="eyebrow">{{ t('public.terms.eyebrow') }}</span>
+  <h1>{{ t('public.terms.heading') }}</h1>
+  <p class="lead">{{ t('public.terms.lead') }}</p>
+  <p class="legal-note">{{ t('public.legal_notice') }}</p>
+</section>
+
+<section class="company-grid two policy-grid">
+  {% for section in ('education', 'school', 'trial', 'billing', 'acceptable', 'emergency') %}
+  <article class="company-card policy-card"><h3>{{ t('public.terms.' ~ section ~ '_title') }}</h3><p>{{ t('public.terms.' ~ section ~ '_body') }}</p></article>
+  {% endfor %}
+</section>
+
+<section class="section company-split legal-split">
+  <div>
+    <span class="eyebrow">{{ t('public.terms.readiness_eyebrow') }}</span>
+    <h2>{{ t('public.terms.readiness_heading') }}</h2>
+    <p class="lead">{{ t('public.terms.readiness_body') }}</p>
+  </div>
+  <div class="company-card legal-callout"><h3>{{ t('public.terms.related_title') }}</h3><p>{{ t('public.terms.related_body') }}</p><div class="hero-actions"><a class="btn ghost" href="{{ url_for('public.privacy') }}">{{ t('public.privacy.title') }}</a><a class="btn ghost" href="{{ url_for('public.data_processing_agreement') }}">{{ t('public.terms.dpa_link') }}</a></div></div>
+</section>
+{% endblock %}

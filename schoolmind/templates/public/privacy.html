@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from "partials/ui_macros.html" import trust_visual %}
+{% block title %}{{ t('public.privacy.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact legal-hero">
+  <span class="eyebrow">{{ t('public.privacy.eyebrow') }}</span>
+  <h1>{{ t('public.privacy.heading') }}</h1>
+  <p class="lead">{{ t('public.privacy.lead') }}</p>
+  <p class="legal-note">{{ tc(legal_notice) }}</p>
+</section>
+
+<section class="section company-grid three policy-grid">
+  {% for item in commitments %}
+    <article class="company-card policy-card">
+      <h3>{{ tc(item.title) }}</h3>
+      <p>{{ tc(item.body) }}</p>
+    </article>
+  {% endfor %}
+</section>
+
+<section class="section company-split legal-split">
+  {{ trust_visual() }}
+  <div>
+    <span class="eyebrow">{{ t('public.privacy.boundary_eyebrow') }}</span>
+    <h2>{{ t('public.privacy.boundary_heading') }}</h2>
+    <p class="lead">{{ t('public.privacy.boundary_body') }}</p>
+    <div class="hero-actions"><a class="btn primary" href="{{ url_for('public.data_processing_agreement') }}">{{ t('public.privacy.dpa_link') }}</a><a class="btn ghost" href="{{ url_for('public.student_data_notice') }}">{{ t('public.privacy.notice_link') }}</a></div>
+  </div>
+</section>
+
+<section class="section table-card legal-table">
+  <span class="eyebrow">{{ t('public.privacy.matrix_eyebrow') }}</span>
+  <h2>{{ t('public.privacy.matrix_heading') }}</h2>
+  <table>
+    <caption class="sr-only">{{ t('public.privacy.matrix_caption') }}</caption>
+    <thead><tr><th scope="col">{{ t('public.privacy.matrix_area') }}</th><th scope="col">{{ t('public.privacy.matrix_posture') }}</th><th scope="col">{{ t('public.privacy.matrix_before') }}</th></tr></thead>
+    <tbody>
+      {% for area, posture, required in readiness_matrix %}
+        <tr><td>{{ tc(area) }}</td><td>{{ tc(posture) }}</td><td>{{ tc(required) }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="section policy-section">
+  <div>
+    <span class="eyebrow">{{ t('public.privacy.requests_eyebrow') }}</span>
+    <h2>{{ t('public.privacy.requests_heading') }}</h2>
+    <p class="lead">{{ t('public.privacy.requests_body') }}</p>
+  </div>
+  <ol class="legal-steps">
+    {% for step in data_rights_workflow %}<li>{{ tc(step) }}</li>{% endfor %}
+  </ol>
+</section>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.playbooks.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.playbooks.eyebrow') }}</span>
+      <h1>{{ t('dashboard.playbooks.heading') }}</h1>
+      <p>{{ t('dashboard.student.support_owner') }}: <strong>{{ settings.support_owner or t('dashboard.playbooks.not_configured') }}</strong> · {{ t('dashboard.playbooks.escalation_target') }}: {{ settings.escalation_window_minutes }} {{ t('dashboard.playbooks.minutes') }}.</p>
+    </div>
+    <div class="dash-grid two">
+      <form class="pixel-form compact" method="post">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.playbooks.create') }}</h2>
+        <label>{{ t('dashboard.playbooks.label_title') }}<input name="title" required></label>
+        <label>{{ t('dashboard.playbooks.trigger') }}<select name="trigger_level"><option value="watch">{{ t('dashboard.playbooks.watch') }}</option><option value="support">{{ t('dashboard.playbooks.support') }}</option><option value="urgent">{{ t('dashboard.playbooks.urgent') }}</option></select></label>
+        <label>{{ t('dashboard.playbooks.steps') }}<textarea name="action_steps" rows="7" required></textarea></label>
+        <button class="btn primary" type="submit">{{ t('dashboard.playbooks.save') }}</button>
+      </form>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.playbooks.title') }}</h2>
+        {% for item in playbooks %}
+          <article class="list-row tall"><span>{{ item.title }}</span><b class="risk {{ item.trigger_level }}">{{ item.trigger_level }}</b><small>{{ item.action_steps }}</small></article>
+        {% else %}<p class="muted">{{ t('dashboard.playbooks.empty') }}</p>{% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

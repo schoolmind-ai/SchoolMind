@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.mood.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head"><span class="eyebrow">{{ t('dashboard.mood.title') }}</span><h1>{{ t('dashboard.mood.heading') }}</h1><p>{{ t('dashboard.mood.intro') }}</p></div>
+    <div class="dash-grid two">
+      <div class="panel-list"><h2>{{ t('dashboard.mood.checkins') }}</h2>{% for item in checkins %}<div class="list-row"><span>{{ t('dashboard.student.field.mood') }} {{ item.mood }} · {{ t('dashboard.student.field.stress') }} {{ item.stress }}</span><b class="risk {{ item.risk_level }}">{{ tc(item.risk_level) }}</b><small>{{ item.created_at }}</small></div>{% else %}<p class="muted">{{ t('dashboard.student.empty_checkins') }}</p>{% endfor %}</div>
+      <div class="panel-list"><h2>{{ t('dashboard.mood.scans') }}</h2>{% for item in assessments %}<div class="list-row tall"><span>{{ tc(item.primary_need|replace('_', ' ')|title) }}</span><b>{{ item.score }}</b><small>{{ tc(item.recommendation) }}</small></div>{% else %}<p class="muted">{{ t('dashboard.common.no_scans_yet') }}</p>{% endfor %}</div>
+    </div>
+  </section>
+</div>
+{% endblock %}

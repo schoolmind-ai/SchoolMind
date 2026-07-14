@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="{{ current_language }}" dir="{{ current_dir }}" data-theme="{{ current_theme }}" data-font-size="{{ current_font_size }}" data-reduced-motion="{{ 'true' if current_reduced_motion else 'false' }}" data-dyslexia="{{ 'true' if current_dyslexia else 'false' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ seo_meta.title }}{% endblock %}</title>
+  <meta name="description" content="{{ seo_meta.description }}">
+  <meta name="keywords" content="{{ seo_meta.keywords }}">
+  <meta name="robots" content="{{ seo_meta.robots }}">
+  <meta name="theme-color" content="#020817">
+  <link rel="canonical" href="{{ seo_meta.canonical }}">
+  <link rel="alternate" hreflang="en" href="{{ seo_meta.alternates.en }}">
+  <link rel="alternate" hreflang="ar" href="{{ seo_meta.alternates.ar }}">
+  <link rel="alternate" hreflang="x-default" href="{{ seo_meta.alternates['x-default'] }}">
+  <meta property="og:site_name" content="SchoolMind AI">
+  <meta property="og:title" content="{{ seo_meta.og_title }}">
+  <meta property="og:description" content="{{ seo_meta.og_description }}">
+  <meta property="og:type" content="{{ seo_meta.og_type }}">
+  <meta property="og:url" content="{{ seo_meta.og_url }}">
+  <meta property="og:image" content="{{ seo_meta.og_image }}">
+  <meta property="og:image:alt" content="{{ seo_meta.og_image_alt }}">
+  <meta property="og:image:type" content="{{ seo_meta.og_image_type }}">
+  <meta property="og:image:width" content="{{ seo_meta.og_image_width }}">
+  <meta property="og:image:height" content="{{ seo_meta.og_image_height }}">
+  <meta property="og:locale" content="{{ seo_meta.locale }}">
+  <meta property="og:locale:alternate" content="{{ seo_meta.alternate_locale }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ seo_meta.twitter_title }}">
+  <meta name="twitter:description" content="{{ seo_meta.twitter_description }}">
+  <meta name="twitter:image" content="{{ seo_meta.twitter_image }}">
+  <meta name="twitter:image:alt" content="{{ seo_meta.twitter_image_alt }}">
+  {% for schema in seo_meta.structured_data %}
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">{{ schema|tojson }}</script>
+  {% endfor %}
+  <link rel="icon" href="{{ url_for('static', filename='img/brand/favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pixel.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/company.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/performance-mobile.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site-shell.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/sitewide-system.css') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  {% block head_extra %}{% endblock %}
+</head>
+{% set endpoint_name = request.endpoint or '' %}
+{% set is_dashboard_surface = current_user and endpoint_name.startswith('dashboard.') %}
+{% set is_platform_surface = current_platform_admin and endpoint_name.startswith('platform.') %}
+{% set is_auth_surface = endpoint_name.startswith('auth.') or endpoint_name == 'platform.platform_login' %}
+{% set is_error_surface = code is defined or endpoint_name == 'public.not_found' %}
+{% set surface_class = 'surface-app' if is_dashboard_surface else ('surface-platform' if is_platform_surface else ('surface-auth' if is_auth_surface else ('surface-error' if is_error_surface else 'surface-public'))) %}
+<body class="{{ surface_class }} route-{{ endpoint_name|replace('.', '-') }} {% block body_class %}{% endblock %}">
+  <a class="skip-link" href="#main">{{ t('skip.content') }}</a>
+  <div class="pixel-bg" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="{{ url_for('platform.platform_home') if is_platform_surface else (url_for('dashboard.app_home') if is_dashboard_surface else url_for('public.index')) }}" aria-label="SchoolMind AI · {{ t('nav.home') }}">
+        <span class="brand-mark">
+          <img src="{{ url_for('static', filename='img/brand/favicon.svg') }}" alt="" aria-hidden="true" width="30" height="30" decoding="async" fetchpriority="high">
+        </span>
+        <span class="brand-copy"><strong>SchoolMind <em>AI</em></strong><small>{{ t('brand.subtitle') }}</small></span>
+      </a>
+
+      <button class="nav-toggle" data-nav-toggle type="button" aria-label="{{ t('nav.open_menu') }}">
+        <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+      </button>
+
+      <nav class="nav" data-nav aria-label="{{ t('nav.primary_aria') }}">
+        <div class="nav-mobile-head">
+          <strong>SchoolMind AI</strong>
+          <button class="nav-close" data-nav-close type="button" aria-label="{{ t('nav.close_menu') }}">×</button>
+        </div>
+        {% if is_platform_surface %}
+          <div class="nav-links app-nav-links">
+            <a href="{{ url_for('platform.platform_home') }}">{{ t('nav.platform') }}</a>
+            <a href="{{ url_for('platform.platform_coupons') }}">{{ t('nav.platform_offers') }}</a>
+            <a href="{{ url_for('platform.platform_settings') }}">{{ t('nav.settings') }}</a>
+          </div>
+        {% elif is_dashboard_surface %}
+          <div class="nav-links app-nav-links">
+            <span class="workspace-context"><strong>{{ current_user.school_name }}</strong><small>{{ current_user.name }} · {{ current_user.role|title }}</small></span>
+            <a href="{{ url_for('dashboard.app_home') }}">{{ t('nav.home') }}</a>
+            <a href="{{ url_for('dashboard.activity_center') }}">{{ t('nav.activity') }}</a>
+            <a href="{{ url_for('dashboard.help_center') }}">{{ t('nav.help') }}</a>
+          </div>
+        {% else %}
+          <div class="nav-links">
+            <a href="{{ url_for('public.product') }}">{{ t('nav.product') }}</a>
+            <a href="{{ url_for('public.features') }}">{{ t('nav.features') }}</a>
+            <a href="{{ url_for('public.schools') }}">{{ t('nav.schools') }}</a>
+            <a href="{{ url_for('public.pricing') }}">{{ t('nav.pricing') }}</a>
+            <a href="{{ url_for('public.trial') }}">{{ t('nav.trial') }}</a>
+            <a href="{{ url_for('public.demo') }}">{{ t('nav.demo') }}</a>
+            <a href="{{ url_for('public.security') }}">{{ t('footer.security') }}</a>
+            <a href="{{ url_for('public.faq') }}">{{ t('nav.faq') }}</a>
+            <a href="{{ url_for('public.contact') }}">{{ t('nav.contact') }}</a>
+          </div>
+        {% endif %}
+        <div class="nav-actions">
+          {% if current_platform_admin %}
+            <a class="nav-login" href="{{ url_for('platform.platform_account_settings') }}">{{ t('nav.settings') }}</a>
+            <a class="nav-cta" href="{{ url_for('platform.platform_home') }}">{{ t('nav.platform') }}</a>
+            <a class="nav-logout" href="{{ url_for('platform.platform_logout') }}">{{ t('nav.logout') }}</a>
+          {% elif current_user %}
+            <a class="nav-login" href="{{ url_for('dashboard.account_settings') }}">{{ t('nav.settings') }}</a>
+            <a class="nav-cta" href="{{ url_for('dashboard.app_home') }}">{{ t('nav.workspace') }}</a>
+            <a class="nav-logout" href="{{ url_for('auth.logout') }}">{{ t('nav.logout') }}</a>
+          {% else %}
+            <a class="nav-login" href="{{ url_for('auth.login') }}">{{ t('nav.login') }}</a>
+            <a class="nav-cta" href="{{ url_for('public.try_demo') }}">{{ t('nav.try_instantly') }}</a>
+          {% endif %}
+          {% if current_language == 'ar' %}
+            <a class="language-control" href="{{ language_url('en') }}" aria-label="{{ t('nav.switch_language') }}"><span aria-hidden="true">◎</span> EN</a>
+          {% else %}
+            <a class="language-control" href="{{ language_url('ar') }}" aria-label="{{ t('nav.switch_language') }}"><span aria-hidden="true">◎</span> AR</a>
+          {% endif %}
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page-shell" tabindex="-1" data-page-main>
+    {% if site_settings.public_announcement and not current_user and not current_platform_admin %}
+      {% set default_announcement = 'Now piloting SchoolMind with schools and youth organizations.' %}
+      <div class="pilot-announcement" role="status">{{ t('site.announcement.default') if site_settings.public_announcement == default_announcement else site_settings.public_announcement }}</div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack" aria-live="polite">
+          {% for category, message in messages %}<div class="flash {{ category }}" role="{{ 'alert' if category in ['error', 'danger'] else 'status' }}">{{ tf(message) }}</div>{% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% if show_personalization and endpoint_name == 'public.index' %}
+      <section class="personalization-panel open personalization-intro" data-personalization-panel aria-labelledby="personalization-title" aria-hidden="false" role="region">
+        <div class="personalization-card">
+          <div class="panel-heading">
+            <span class="eyebrow">{{ t('personalize.eyebrow') }}</span>
+            <h2 id="personalization-title">{{ t('personalize.title') }}</h2>
+            <p>{{ t('personalize.subtitle') }}</p>
+            <button class="btn ghost compact-btn personalization-expand" type="button" data-personalization-fields-toggle aria-expanded="false" aria-controls="personalization-fields">{{ t('personalize.reopen') }}</button>
+          </div>
+          <form class="personalization-form" action="{{ url_for('public.personalize_preferences') }}" method="post">
+            {% include "partials/form_csrf.html" %}
+            <input type="hidden" name="intent" value="save">
+            <div class="personalization-fields" id="personalization-fields" data-personalization-fields>
+              <div class="form-grid">
+                <label>{{ t('settings.language') }}
+                  <select name="language">
+                    {% for code, meta in supported_languages.items() if code in ('en', 'ar') %}
+                      <option value="{{ code }}" {% if code == current_language %}selected{% endif %}>{{ meta.name }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+                <label>{{ t('settings.theme') }}
+                  <select name="theme">
+                    {% for code, label in supported_themes.items() %}
+                      <option value="{{ code }}" {% if code == current_theme %}selected{% endif %}>{{ t('theme.' ~ code) }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+                <label>{{ t('settings.font_size') }}
+                  <select name="font_size">
+                    {% for code, label in font_sizes.items() %}
+                      <option value="{{ code }}" {% if code == current_font_size %}selected{% endif %}>{{ t('font_size.' ~ code) }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+              </div>
+              <div class="pref-checks">
+                <label class="inline-check"><input type="checkbox" name="reduced_motion" {% if current_reduced_motion %}checked{% endif %}>{{ t('settings.reduced_motion') }}</label>
+                <label class="inline-check"><input type="checkbox" name="high_contrast" {% if current_high_contrast %}checked{% endif %}>{{ t('settings.high_contrast') }}</label>
+                <label class="inline-check"><input type="checkbox" name="dyslexia_friendly" {% if current_dyslexia %}checked{% endif %}>{{ t('settings.dyslexia') }}</label>
+              </div>
+              <div class="composer-row">
+                <button class="btn primary" type="submit">{{ t('personalize.save') }}</button>
+                <button class="btn ghost" type="button" data-personalization-close>{{ t('common.cancel') }}</button>
+              </div>
+            </div>
+          </form>
+          <form class="personalization-dismiss" action="{{ url_for('public.personalize_preferences') }}" method="post">
+            {% include "partials/form_csrf.html" %}
+            <input type="hidden" name="intent" value="dismiss">
+            <button class="link-button" type="submit">{{ t('personalize.dismiss') }}</button>
+          </form>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if session.get('experience_mode') == 'guided_demo' and current_user %}
+      <aside class="demo-nudge" aria-label="{{ t('demo.mode.title') }}">
+        <div><strong>{{ t('demo.mode.title') }}</strong><span>{{ t('demo.mode.body') }}</span></div>
+        <div class="row-actions">
+          <a class="btn ghost" href="{{ url_for('public.demo') }}">{{ t('demo.mode.switch') }}</a>
+          <a class="btn ghost" href="{{ url_for('auth.login') }}">{{ t('demo.mode.login') }}</a>
+          <a class="btn primary" href="{{ url_for('auth.start') }}">{{ t('demo.mode.create') }}</a>
+        </div>
+      </aside>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  {% if not is_dashboard_surface and not is_platform_surface %}
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a class="footer-logo" href="{{ url_for('public.index') }}">SchoolMind <em>AI</em></a>
+        <p>{{ t('footer.statement') }}</p>
+        <div class="footer-social" aria-hidden="true"><span>in</span><span>▶</span><span>●</span></div>
+      </div>
+      <div class="footer-column"><strong>{{ t('footer.product') }}</strong>
+        <a href="{{ url_for('public.product') }}">{{ t('nav.product') }}</a>
+        <a href="{{ url_for('public.features') }}">{{ t('footer.features') }}</a>
+        <a href="{{ url_for('public.demo') }}">{{ t('footer.demo') }}</a>
+        <a href="{{ url_for('public.pricing') }}">{{ t('footer.pricing') }}</a>
+      </div>
+      <div class="footer-column"><strong>{{ t('footer.use_cases') }}</strong>
+        <a href="{{ url_for('public.schools') }}">{{ t('footer.for_schools') }}</a>
+        <a href="{{ url_for('public.counselors') }}">{{ t('footer.for_counselors') }}</a>
+        <a href="{{ url_for('public.teachers') }}">{{ t('footer.for_teachers') }}</a>
+        <a href="{{ url_for('public.request_demo') }}">{{ t('footer.for_parents') }}</a>
+      </div>
+      <div class="footer-column"><strong>{{ t('footer.resources') }}</strong>
+        <a href="{{ url_for('public.faq') }}">{{ t('footer.help') }}</a>
+        <a href="{{ url_for('public.safety') }}">{{ t('footer.ai_safety') }}</a>
+        <a href="{{ url_for('public.human_review') }}">{{ t('home.trust.human_review') }}</a>
+        <a href="{{ url_for('public.security') }}">{{ t('footer.security') }}</a>
+      </div>
+      <div class="footer-column"><strong>{{ t('footer.company') }}</strong>
+        <a href="{{ url_for('public.about') }}">{{ t('footer.about') }}</a>
+        <a href="{{ url_for('public.contact') }}">{{ t('footer.contact') }}</a>
+        <a href="{{ url_for('public.request_demo') }}">{{ t('nav.request_demo') }}</a>
+        <a href="{{ url_for('public.implementation') }}">{{ t('footer.partners') }}</a>
+      </div>
+      <div class="footer-column"><strong>{{ t('footer.legal') }}</strong>
+        <a href="{{ url_for('public.privacy') }}">{{ t('footer.privacy') }}</a>
+        <a href="{{ url_for('public.terms') }}">{{ t('footer.terms') }}</a>
+        <a href="{{ url_for('public.compliance') }}">{{ t('home.security.soc2') }}</a>
+        <a href="{{ url_for('public.data_processing_agreement') }}">{{ t('footer.data_processing') }}</a>
+        <a href="{{ url_for('public.incident_response') }}">{{ t('footer.incident_response') }}</a>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>{{ t('footer.copyright') }}</span><span>{{ t('footer.made_for_schools') }}</span></div>
+  </footer>
+  {% endif %}
+
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/lang.js') }}" defer></script>
+</body>
+</html>

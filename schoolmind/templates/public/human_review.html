@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from "partials/ui_macros.html" import trust_visual %}
+{% block title %}{{ t('public.human_review.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.human_review.eyebrow') }}</span>
+  <h1>{{ t('public.human_review.heading') }}</h1>
+  <p class="lead">{{ t('public.human_review.lead') }}</p>
+</section>
+<section class="section company-split">
+  <div>
+    <span class="eyebrow">{{ t('public.human_review.principle_eyebrow') }}</span>
+    <h2>{{ t('public.human_review.principle_heading') }}</h2>
+    <ul class="company-list">
+      <li>{{ t('public.human_review.point_1') }}</li>
+      <li>{{ t('public.human_review.point_2') }}</li>
+      <li>{{ t('public.human_review.point_3') }}</li>
+      <li>{{ t('public.human_review.point_4') }}</li>
+    </ul>
+  </div>
+  {{ trust_visual() }}
+</section>
+<section class="section trust-stack">
+  {% for step in ('signal', 'indicator', 'review', 'action') %}
+  <article class="company-card"><span class="pixel-icon">{{ loop.index }}</span><h3>{{ t('public.human_review.' ~ step ~ '_title') }}</h3><p>{{ t('public.human_review.' ~ step ~ '_body') }}</p></article>
+  {% endfor %}
+</section>
+{% endblock %}

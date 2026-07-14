@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.student_notice.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact legal-hero">
+  <span class="eyebrow">{{ t('public.student_notice.eyebrow') }}</span>
+  <h1>{{ t('public.student_notice.heading') }}</h1>
+  <p class="lead">{{ t('public.student_notice.lead') }}</p>
+  <p class="legal-note">{{ t('public.legal_notice') }}</p>
+</section>
+
+<section class="section company-grid two policy-grid">
+  {% for item in notice_points %}
+    <article class="company-card policy-card"><h3>{{ t('public.student_notice.point_' ~ loop.index ~ '_title') }}</h3><p>{{ t('public.student_notice.point_' ~ loop.index ~ '_body') }}</p></article>
+  {% endfor %}
+</section>
+
+<section class="section final-cta-section">
+  <span class="eyebrow">{{ t('public.student_notice.school_eyebrow') }}</span>
+  <h2>{{ t('public.student_notice.school_heading') }}</h2>
+  <p>{{ t('public.student_notice.school_body') }}</p>
+  <div class="hero-actions"><a class="btn primary" href="{{ url_for('public.contact') }}">{{ t('public.student_notice.questions_link') }}</a><a class="btn ghost" href="{{ url_for('public.privacy') }}">{{ t('public.student_notice.privacy_link') }}</a></div>
+</section>
+{% endblock %}

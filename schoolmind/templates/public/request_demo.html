@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.request_demo.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section company-split">
+  <div>
+    <span class="eyebrow">{{ t('public.request_demo.eyebrow') }}</span>
+    <h1>{{ t('public.request_demo.heading') }}</h1>
+    <p class="lead">{{ t('public.request_demo.lead') }}</p>
+    <div class="stat-band">
+      <article><strong>{{ t('public.request_demo.thirty_days') }}</strong><span>{{ t('public.request_demo.trial_available') }}</span></article>
+      <article><strong>${{ plans['starter']['price'] }}</strong><span>{{ t('public.request_demo.standard_monthly') }}</span></article>
+      <article><strong>${{ plans['growth']['price']|int }}</strong><span>{{ t('public.request_demo.pro_monthly') }}</span></article>
+    </div>
+    <ul class="company-list">
+      <li>{{ t('public.request_demo.point_1') }}</li>
+      <li>{{ t('public.request_demo.point_2') }}</li>
+      <li>{{ t('public.request_demo.point_3') }}</li>
+    </ul>
+  </div>
+  <form class="pixel-form" method="post" action="{{ url_for('public.contact') }}">
+    {% include "partials/form_csrf.html" %}
+    <input type="hidden" name="lead_type" value="demo">
+    <label>{{ t('public.form.name') }}<input name="name" required></label>
+    <label>{{ t('public.form.school') }}<input name="school_name" required></label>
+    <label>{{ t('public.form.email') }}<input name="email" type="email" required></label>
+    <label>{{ t('public.form.estimated_students') }}<input name="student_count" inputmode="numeric" placeholder="{{ t('public.request_demo.students_placeholder') }}"></label>
+    <label>{{ t('public.request_demo.path_label') }}
+      <select name="preferred_path">
+        <option value="demo_first">{{ t('public.request_demo.path_demo') }}</option>
+        <option value="self_serve_trial">{{ t('public.request_demo.path_trial') }}</option>
+        <option value="guided_pilot">{{ t('public.request_demo.path_pilot') }}</option>
+        <option value="not_sure">{{ t('public.request_demo.not_sure') }}</option>
+      </select>
+    </label>
+    <label>{{ t('public.request_demo.plan_label') }}
+      <select name="requested_plan">
+        <option value="starter">{{ t('public.pricing.plan_starter') }} · ${{ plans['starter']['price'] }}/{{ t('public.pricing.month') }}</option>
+        <option value="growth">{{ t('public.pricing.plan_growth') }} · ${{ plans['growth']['price']|int }}/{{ t('public.pricing.month') }}</option>
+        <option value="scale">{{ t('public.pricing.plan_scale') }} / {{ t('public.request_demo.path_pilot') }}</option>
+        <option value="">{{ t('public.request_demo.not_sure') }}</option>
+      </select>
+    </label>
+    <label>{{ t('public.request_demo.billing_label') }}
+      <select name="billing_cycle">
+        <option value="monthly">{{ t('public.pricing.monthly') }}</option>
+        <option value="six_month">{{ t('public.pricing.six_months') }}</option>
+        <option value="annual">{{ t('public.pricing.annual') }}</option>
+      </select>
+    </label>
+    <label>{{ t('public.request_demo.evaluate_label') }}<textarea name="message" rows="7" required>{{ t('public.request_demo.message_default') }}</textarea></label>
+    <button class="btn primary" type="submit">{{ t('public.request_demo.submit') }}</button>
+    <p class="muted">{{ t('public.request_demo.footnote') }}</p>
+  </form>
+</section>
+{% endblock %}

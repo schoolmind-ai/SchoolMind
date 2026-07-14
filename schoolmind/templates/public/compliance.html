@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.compliance.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.compliance.eyebrow') }}</span>
+  <h1>{{ t('public.compliance.heading') }}</h1>
+  <p class="lead">{{ t('public.compliance.lead') }}</p>
+</section>
+<section class="section company-grid three">
+  <article class="company-card"><h3>{{ t('public.compliance.built_title') }}</h3><p>{{ t('public.compliance.built_body') }}</p></article>
+  <article class="company-card"><h3>{{ t('public.compliance.school_title') }}</h3><p>{{ t('public.compliance.school_body') }}</p></article>
+  <article class="company-card"><h3>{{ t('public.compliance.external_title') }}</h3><p>{{ t('public.compliance.external_body') }}</p></article>
+</section>
+<section class="section table-card">
+  <table>
+    <caption class="sr-only">{{ t('public.compliance.table_caption') }}</caption>
+    <thead><tr><th scope="col">{{ t('public.compliance.table_area') }}</th><th scope="col">{{ t('public.compliance.table_posture') }}</th><th scope="col">{{ t('public.compliance.table_before') }}</th></tr></thead>
+    <tbody>
+      {% for row in ('privacy', 'hosting', 'ai', 'payments') %}
+      <tr><td>{{ t('public.compliance.' ~ row ~ '_area') }}</td><td>{{ t('public.compliance.' ~ row ~ '_posture') }}</td><td>{{ t('public.compliance.' ~ row ~ '_before') }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+<section class="section final-cta-section"><span class="eyebrow">{{ t('public.compliance.badges_eyebrow') }}</span><h2>{{ t('public.compliance.badges_heading') }}</h2><p>{{ t('public.compliance.badges_body') }}</p></section>
+{% endblock %}

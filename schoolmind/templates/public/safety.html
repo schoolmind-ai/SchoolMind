@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.safety.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section company-split ai-safety-hero">
+  <div>
+    <span class="eyebrow">{{ t('public.safety.eyebrow') }}</span>
+    <h1>{{ t('public.safety.heading') }}</h1>
+    <p class="lead">{{ t('public.safety.statement') }}</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="{{ url_for('public.human_review') }}">{{ t('public.safety.human_link') }}</a>
+      <a class="btn ghost" href="{{ url_for('public.privacy') }}">{{ t('public.safety.privacy_link') }}</a>
+    </div>
+  </div>
+  <div class="company-image"><picture class="smart-picture"><source srcset="{{ url_for('static', filename='img/pages/06_student_nour_ai_companion.webp') }}" type="image/webp"><img src="{{ url_for('static', filename='img/pages/06_student_nour_ai_companion.png') }}" alt="{{ t('public.safety.image_alt') }}" loading="lazy" decoding="async" width="369" height="312"></picture></div>
+</section>
+
+<section class="section ai-safety-principles">
+  <div class="section-head">
+    <span class="eyebrow">{{ t('public.safety.boundaries_eyebrow') }}</span>
+    <h2>{{ t('public.safety.boundaries_heading') }}</h2>
+    <p class="lead">{{ t('public.safety.boundaries_body') }}</p>
+  </div>
+  <div class="company-grid four">
+    {% for item in principles %}
+      <article class="company-card ai-boundary-card"><span class="pixel-icon">{{ loop.index }}</span><h3>{{ t('public.safety.principle_' ~ loop.index ~ '_title') }}</h3><p>{{ t('public.safety.principle_' ~ loop.index ~ '_body') }}</p></article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section company-split ai-safety-rules">
+  <div class="company-card do-card">
+    <span class="eyebrow">{{ t('public.safety.allowed_eyebrow') }}</span>
+    <h2>{{ t('public.safety.allowed_heading') }}</h2>
+    <ul class="company-list">
+      {% for item in do_list %}<li>{{ t('public.safety.do_' ~ loop.index) }}</li>{% endfor %}
+    </ul>
+  </div>
+  <div class="company-card dont-card">
+    <span class="eyebrow">{{ t('public.safety.not_allowed_eyebrow') }}</span>
+    <h2>{{ t('public.safety.not_allowed_heading') }}</h2>
+    <ul class="company-list">
+      {% for item in do_not_list %}<li>{{ t('public.safety.do_not_' ~ loop.index) }}</li>{% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section ai-routing-model">
+  <div class="section-head">
+    <span class="eyebrow">{{ t('public.safety.routing_eyebrow') }}</span>
+    <h2>{{ t('public.safety.routing_heading') }}</h2>
+  </div>
+  <div class="timeline-grid">
+    {% for step in ('input', 'signal', 'review', 'protocol') %}
+    <article><span>{{ loop.index }}</span><h3>{{ t('public.safety.routing_' ~ step ~ '_title') }}</h3><p>{{ t('public.safety.routing_' ~ step ~ '_body') }}</p></article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

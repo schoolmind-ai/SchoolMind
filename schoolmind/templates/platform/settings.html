@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ t('platform.settings.title') }} · SchoolMind Platform{% endblock %}
+{% block content %}
+<section class="dash-main">
+  <div class="dash-head">
+    <span class="eyebrow">{{ t('platform.settings.eyebrow') }}</span>
+    <h1>{{ t('platform.settings.title') }}</h1>
+    <p>{{ t('platform.settings.intro') }}</p>
+  </div>
+  <form class="pixel-form compact" method="post">
+    {% include "partials/form_csrf.html" %}
+    <label>{{ t('platform.settings.announcement') }}<input name="public_announcement" value="{{ settings.public_announcement or '' }}"></label>
+    <label>{{ t('platform.settings.home_title') }}<textarea name="hero_title" rows="2">{{ settings.hero_title or '' }}</textarea></label>
+    <label>{{ t('platform.settings.home_subtitle') }}<textarea name="hero_subtitle" rows="4">{{ settings.hero_subtitle or '' }}</textarea></label>
+    <label>{{ t('platform.settings.maintenance') }}
+      <select name="maintenance_mode">
+        <option value="false" {% if settings.maintenance_mode != 'true' %}selected{% endif %}>{{ t('platform.settings.off') }}</option>
+        <option value="true" {% if settings.maintenance_mode == 'true' %}selected{% endif %}>{{ t('platform.settings.on') }}</option>
+      </select>
+    </label>
+    <label>{{ t('platform.settings.public_trials') }}
+      <select name="allow_public_trials">
+        <option value="true" {% if settings.allow_public_trials != 'false' %}selected{% endif %}>{{ t('platform.settings.allowed') }}</option>
+        <option value="false" {% if settings.allow_public_trials == 'false' %}selected{% endif %}>{{ t('platform.settings.hidden') }}</option>
+      </select>
+    </label>
+    <button class="btn primary" type="submit">{{ t('platform.settings.save') }}</button>
+  </form>
+</section>
+{% endblock %}

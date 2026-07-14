@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% from "partials/ui_macros.html" import page_header, empty_state %}
+{% block title %}{{ t('platform.home.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<section class="dash-main">
+  {{ page_header(t('platform.home.eyebrow'), t('platform.home.title'), t('platform.home.intro')) }}
+  <div class="metric-strip">
+    <div class="metric-card steady"><small>{{ t('platform.home.schools') }}</small><strong>{{ stats.schools }}</strong></div>
+    <div class="metric-card steady"><small>{{ t('dashboard.common.active') }}</small><strong>{{ stats.active }}</strong></div>
+    <div class="metric-card watch"><small>{{ t('platform.home.trials') }}</small><strong>{{ stats.trial }}</strong></div>
+    <div class="metric-card"><small>{{ t('platform.home.users') }}</small><strong>{{ stats.users }}</strong></div>
+    <div class="metric-card urgent"><small>{{ t('platform.home.open_signals') }}</small><strong>{{ stats.open_events }}</strong></div>
+    <div class="metric-card watch"><small>{{ t('platform.home.new_leads') }}</small><strong>{{ stats.leads }}</strong></div>
+  </div>
+
+  <div class="dash-grid two">
+    <a class="feature-card clickable" href="{{ url_for('platform.platform_coupons') }}">
+      <span class="pixel-icon">%</span>
+      <h3>{{ t('platform.home.coupons') }}</h3>
+      <p>{{ t('platform.home.coupons_body') }}</p>
+    </a>
+    <a class="feature-card clickable" href="{{ url_for('platform.platform_settings') }}">
+      <span class="pixel-icon">SET</span>
+      <h3>{{ t('platform.home.site_settings') }}</h3>
+      <p>{{ t('platform.home.site_settings_body') }}</p>
+    </a>
+  </div>
+
+  <div class="panel-list">
+    <h2>{{ t('platform.home.schools') }}</h2>
+    {% for school in schools %}
+      <a class="list-row tall clickable" href="{{ url_for('platform.platform_school', school_id=school.id) }}">
+        <div>
+          <strong>{{ school.name }}</strong>
+          <small><bdi>{{ school.slug }}</bdi> · {{ t('public.pricing.plan_' ~ school.plan) }} · {{ tc(school.status) }} · {{ t('platform.home.users') }}: {{ school.users_count or 0 }} · {{ t('dashboard.common.students') }}: {{ school.students_count or 0 }}</small>
+        </div>
+        <span class="risk {{ 'urgent' if school.open_events else 'steady' }}">{{ school.open_events or 0 }} {{ t('dashboard.common.open') }}</span>
+      </a>
+    {% endfor %}
+  </div>
+
+  <div class="dash-grid two">
+    <div class="panel-list">
+      <h2>{{ t('platform.home.sales_leads') }}</h2>
+      {% for lead in leads %}
+        <div class="list-row tall">
+          <div><strong>{{ lead.school_name or lead.name }}</strong><small>{{ lead.email }} · {{ lead.created_at }}</small><small>{{ lead.message }}</small></div>
+          <span>{{ tc(lead.status) }}</span>
+        </div>
+      {% else %}{{ empty_state(t('platform.home.no_leads'), t('platform.home.no_leads_body')) }}{% endfor %}
+    </div>
+    <div class="panel-list">
+      <h2>{{ t('platform.home.billing_events') }}</h2>
+      {% for event in billing %}
+        <div class="list-row tall">
+          <div><strong>{{ tc(event.event_type) }}</strong><small>{{ event.school_name }} · {{ t('public.pricing.plan_' ~ event.plan) }} · <bdi>${{ event.amount }}</bdi> · {{ event.created_at }}</small></div>
+          <span>{{ event.provider_reference or t('platform.home.manual') }}</span>
+        </div>
+      {% else %}{{ empty_state(t('platform.home.no_billing'), t('platform.home.no_billing_body')) }}{% endfor %}
+    </div>
+  </div>
+
+  <div class="dash-grid two">
+    <div class="panel-list">
+      <h2>{{ t('platform.home.recent_coupons') }}</h2>
+      {% for coupon in coupons %}
+        <div class="list-row tall">
+          <div><strong><bdi>{{ coupon.code }}</bdi></strong><small>{{ coupon.discount_percent }}% · {{ tc(coupon.status) }} · {{ tc(coupon.applies_to_plan) }}</small></div>
+          <span>{{ coupon.redeemed_count }}/{{ coupon.max_redemptions }}</span>
+        </div>
+      {% else %}{{ empty_state(t('platform.home.no_coupons'), t('platform.home.no_coupons_body')) }}{% endfor %}
+    </div>
+    <div class="panel-list">
+      <h2>{{ t('platform.home.site_settings') }}</h2>
+      {% for item in settings %}
+        <div class="list-row tall">
+          <div><strong>{{ item.key }}</strong><small>{{ item.value }}</small></div>
+          <span>{{ item.updated_at }}</span>
+        </div>
+      {% else %}{{ empty_state(t('platform.home.no_settings'), t('platform.home.no_settings_body')) }}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

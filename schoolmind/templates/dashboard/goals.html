@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.goals.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head"><span class="eyebrow">{{ t('dashboard.goals.title') }}</span><h1>{{ t('dashboard.goals.heading') }}</h1><p>{{ t('dashboard.goals.allowance') }} {{ limits.active_goals }} {{ t('dashboard.common.active_goals') }}.</p></div>
+    <div class="dash-grid two">
+      <form class="pixel-form compact" method="post">
+        {% include "partials/form_csrf.html" %}
+        <input type="hidden" name="action" value="create">
+        <h2>{{ t('dashboard.goals.create') }}</h2>
+        <label>{{ t('dashboard.goals.label_title') }}<input name="title" placeholder="{{ t('dashboard.goals.title_placeholder') }}"></label>
+        <label>{{ t('dashboard.goals.category') }}<select name="category"><option value="study">{{ t('dashboard.goals.study') }}</option><option value="wellbeing">{{ t('dashboard.goals.wellbeing') }}</option><option value="social">{{ t('dashboard.goals.social') }}</option><option value="sleep">{{ t('dashboard.goals.sleep') }}</option></select></label>
+        <label>{{ t('dashboard.goals.target_date') }}<input name="target_date" type="date"></label>
+        <label>{{ t('dashboard.goals.description') }}<textarea name="description" rows="4"></textarea></label>
+        <button class="btn primary" type="submit">{{ t('dashboard.goals.create') }}</button>
+      </form>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.goals.method') }}</h2>
+        <div class="list-row tall"><span>{{ t('dashboard.goals.outcome') }}</span><b>1</b><small>{{ t('dashboard.goals.outcome_note') }}</small></div>
+        <div class="list-row tall"><span>{{ t('dashboard.goals.blocker') }}</span><b>2</b><small>{{ t('dashboard.goals.blocker_note') }}</small></div>
+        <div class="list-row tall"><span>{{ t('dashboard.goals.support_person') }}</span><b>3</b><small>{{ t('dashboard.goals.support_note') }}</small></div>
+      </div>
+    </div>
+    <div class="panel-list">
+      <h2>{{ t('dashboard.goals.your_goals') }}</h2>
+      {% for goal in goals %}
+        <div class="list-row tall">
+          <span><bdi dir="auto">{{ goal.title }}</bdi></span><b>{{ tc(goal.status) }} · {{ goal.progress }}%</b>
+          <small><bdi dir="auto">{{ goal.description }}</bdi> · {{ tc(goal.category) }} · {{ goal.target_date or t('dashboard.goals.no_date') }}</small>
+          <form method="post">
+            {% include "partials/form_csrf.html" %}
+            <input type="hidden" name="action" value="progress"><input type="hidden" name="goal_id" value="{{ goal.id }}">
+            <label><span class="sr-only">{{ t('dashboard.goals.progress_for') }} {{ goal.title }}</span><input name="progress" aria-label="{{ t('dashboard.goals.progress_for') }} {{ goal.title }}" type="number" min="0" max="100" value="{{ goal.progress }}"></label>
+            <button class="btn ghost" type="submit">{{ t('dashboard.goals.update') }}</button>
+          </form>
+        </div>
+      {% else %}<p class="muted">{{ t('dashboard.goals.empty') }}</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

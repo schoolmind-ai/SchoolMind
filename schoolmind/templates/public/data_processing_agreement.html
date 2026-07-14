@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.dpa.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact legal-hero">
+  <span class="eyebrow">{{ t('public.dpa.eyebrow') }}</span>
+  <h1>{{ t('public.dpa.heading') }}</h1>
+  <p class="lead">{{ t('public.dpa.lead') }}</p>
+  <p class="legal-note">{{ t('public.legal_notice') }}</p>
+</section>
+
+<section class="section company-grid two policy-grid">
+  {% for item in dpa_sections %}
+    <article class="company-card policy-card"><h3>{{ t('public.dpa.section_' ~ loop.index ~ '_title') }}</h3><p>{{ t('public.dpa.section_' ~ loop.index ~ '_body') }}</p></article>
+  {% endfor %}
+</section>
+
+<section class="section table-card legal-table">
+  <span class="eyebrow">{{ t('public.dpa.fields_eyebrow') }}</span>
+  <h2>{{ t('public.dpa.fields_heading') }}</h2>
+  <table>
+    <caption class="sr-only">{{ t('public.dpa.table_caption') }}</caption>
+    <thead><tr><th scope="col">{{ t('public.dpa.table_field') }}</th><th scope="col">{{ t('public.dpa.table_why') }}</th></tr></thead>
+    <tbody>
+      {% for row in ('entity', 'categories', 'age', 'region', 'retention', 'incident') %}
+      <tr><td>{{ t('public.dpa.' ~ row ~ '_field') }}</td><td>{{ t('public.dpa.' ~ row ~ '_why') }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

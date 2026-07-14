@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.case.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.case.detail') }}</span>
+      <h1>{{ student.name }}</h1>
+      <p>{{ student.email }} · {{ student.group_name or t('dashboard.common.unassigned') }}</p>
+    </div>
+
+    <div class="panel-list support-brief {{ case_brief.level }}">
+      <h2>{{ t('dashboard.case.brief') }}</h2>
+      <div class="list-row tall">
+        <span>{{ tc(case_brief.focus) }}</span>
+        <b class="risk {{ case_brief.level }}">{{ tc(case_brief.level) }}</b>
+        <small>{{ tc(case_brief.recommendation) }}</small>
+        <small>{{ case_brief.open_plans }} {{ t('dashboard.case.active_plans') }} · {{ case_brief.recent_inputs }} {{ t('dashboard.case.inputs_reviewed') }}</small>
+      </div>
+    </div>
+
+    <div class="dash-grid two">
+      <form class="pixel-form compact" method="post" action="{{ url_for('dashboard.counselor_intervention') }}">
+        {% include "partials/form_csrf.html" %}
+        <input type="hidden" name="student_id" value="{{ student.id }}">
+        <h2>{{ t('dashboard.case.record_intervention') }}</h2>
+        <label>{{ t('dashboard.common.action') }}<input name="action" value="{{ t('dashboard.case.follow_up') }}"></label>
+        <label>{{ t('dashboard.case.note') }}<textarea name="note" rows="4" required></textarea></label>
+        <button class="btn primary" type="submit">{{ t('dashboard.case.save_close') }}</button>
+      </form>
+      <form class="pixel-form compact" method="post" action="{{ url_for('dashboard.counselor_create_plan', user_id=student.id) }}">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.case.create_plan') }}</h2>
+        <label>{{ t('dashboard.case.focus_area') }}<input name="focus_area" value="{{ tc(case_brief.focus) }}"></label>
+        <label>{{ t('dashboard.case.goal') }}<textarea name="goal" rows="2" required>{{ t('dashboard.case.goal_prefix') }} {{ case_brief.focus|lower }} {{ t('dashboard.case.goal_suffix') }}</textarea></label>
+        <label>{{ t('dashboard.case.next_step') }}<textarea name="next_step" rows="3" required>{{ tc(case_brief.recommendation) }}</textarea></label>
+        <label>{{ t('dashboard.case.cadence') }}<input name="cadence" value="{{ t('dashboard.case.cadence_default') }}"></label>
+        <button class="btn ghost" type="submit">{{ t('dashboard.case.add_plan') }}</button>
+      </form>
+    </div>
+
+    <div class="dash-grid three">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.plans.title') }}</h2>
+        {% for plan in plans %}
+          <div class="list-row tall">
+            <span>{{ tc(plan.focus_area) }}</span><b>{{ tc(plan.status) }}</b>
+            <small>{{ tc(plan.goal) }}</small>
+            <small>{{ tc(plan.next_step) }} · {{ tc(plan.cadence) }} · {{ plan.creator_name or t('dashboard.case.generated') }}</small>
+          </div>
+        {% else %}<p class="muted">{{ t('dashboard.case.no_plans') }}</p>{% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.case.scans') }}</h2>
+        {% for item in assessments %}
+          <div class="list-row tall">
+            <span>{{ tc(item.primary_need|replace('_', ' ')|title) }}</span><b class="risk {{ item.risk_level }}">{{ item.score }}</b>
+            <small>{{ tc(item.recommendation) }}</small>
+            <small>{{ t('dashboard.student.field.mood') }} {{ item.mood }} · {{ t('dashboard.student.field.stress') }} {{ item.stress }} · {{ t('dashboard.student.field.sleep') }} {{ item.sleep }} · {{ t('dashboard.student.field.belonging') }} {{ item.belonging }}</small>
+          </div>
+        {% else %}<p class="muted">{{ t('dashboard.case.no_scans') }}</p>{% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.case.events') }}</h2>
+        {% for event in events %}
+          <div class="list-row tall">
+            <span>{{ tc(event.title) }}</span><b class="risk {{ event.risk_level }}">{{ tc(event.risk_level) }} · {{ tc(event.status) }}</b>
+            <small><bdi dir="auto">{{ event.detail }}</bdi></small>
+            <small>{{ t('dashboard.common.assigned') }}: {{ event.assigned_name or t('dashboard.common.unassigned') }} · {{ t('dashboard.case.created') }}: {{ event.created_at }}</small>
+            {% if event.status == 'open' %}
+              <form class="inline-action" method="post" action="{{ url_for('dashboard.counselor_alert_action', event_id=event.id) }}">
+                {% include "partials/form_csrf.html" %}
+                <input type="hidden" name="action" value="escalated">
+                <label><span class="sr-only">{{ t('dashboard.case.escalation_note') }}</span><input name="note" aria-label="{{ t('dashboard.case.escalation_note') }}" placeholder="{{ t('dashboard.case.escalation_note') }}" required></label>
+                <button class="btn ghost" type="submit">{{ t('dashboard.case.escalate') }}</button>
+              </form>
+            {% endif %}
+          </div>
+        {% else %}<p class="muted">{{ t('dashboard.case.no_events') }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <div class="dash-grid three">
+      <div class="panel-list"><h2>{{ t('dashboard.case.checkins') }}</h2>{% for checkin in checkins %}<div class="list-row tall"><span>{{ t('dashboard.student.field.mood') }} {{ checkin.mood }} · {{ t('dashboard.student.field.stress') }} {{ checkin.stress }} · {{ t('dashboard.student.field.energy') }} {{ checkin.energy }}</span><b class="risk {{ checkin.risk_level }}">{{ tc(checkin.risk_level) }}</b><small><bdi dir="auto">{{ checkin.note }}</bdi></small></div>{% else %}<p class="muted">{{ t('dashboard.case.no_checkins') }}</p>{% endfor %}</div>
+      <div class="panel-list"><h2>{{ t('dashboard.journal.title') }}</h2>{% for journal in journals %}<div class="list-row tall"><span><bdi dir="auto">{{ journal.body }}</bdi></span><b class="risk {{ journal.risk_level }}">{{ tc(journal.risk_level) }}</b><small>{{ tc(journal.ai_summary) }}</small></div>{% else %}<p class="muted">{{ t('dashboard.case.no_journals') }}</p>{% endfor %}</div>
+      <div class="panel-list"><h2>{{ t('dashboard.case.actions') }}</h2>{% for item in case_actions %}<div class="list-row tall"><span>{{ item.action }} · {{ item.event_title }}</span><b>{{ item.counselor_name }}</b><small>{{ item.note }} · {{ item.created_at }}</small></div>{% else %}<p class="muted">{{ t('dashboard.case.no_actions') }}</p>{% endfor %}</div>
+    </div>
+
+    <div class="dash-grid two">
+      <div class="panel-list"><h2>{{ t('dashboard.case.interventions') }}</h2>{% for intervention in interventions %}<div class="list-row tall"><span>{{ intervention.action }}</span><b>{{ intervention.counselor_name }}</b><small>{{ intervention.note }}</small></div>{% else %}<p class="muted">{{ t('dashboard.case.no_interventions') }}</p>{% endfor %}</div>
+      <div class="panel-list"><h2>{{ t('dashboard.consent.records') }}</h2>{% for item in consent %}<div class="list-row tall"><span>{{ item.guardian_name }}</span><b>{{ tc(item.status) }}</b><small><bdi>{{ item.guardian_email }}</bdi> · <bdi dir="auto">{{ item.note }}</bdi></small></div>{% else %}<p class="muted">{{ t('dashboard.consent.empty') }}</p>{% endfor %}</div>
+    </div>
+
+    <div class="dash-grid three">
+      <div class="panel-list"><h2>{{ t('dashboard.goals.title') }}</h2>{% for goal in goals %}<div class="list-row tall"><span><bdi dir="auto">{{ goal.title }}</bdi></span><b>{{ goal.progress }}%</b><small>{{ tc(goal.category) }} · {{ tc(goal.status) }} · <bdi dir="auto">{{ goal.description }}</bdi></small></div>{% else %}<p class="muted">{{ t('dashboard.goals.empty') }}</p>{% endfor %}</div>
+      <div class="panel-list"><h2>{{ t('games.title') }}</h2>{% for game in games %}<div class="list-row tall"><span>{{ tc(game.game_name|replace('_', ' ')|title) }}</span><b>{{ game.score }}</b><small>{{ game.duration_seconds }} {{ t('dashboard.case.seconds') }} · {{ game.created_at }}</small></div>{% else %}<p class="muted">{{ t('dashboard.games.empty') }}</p>{% endfor %}</div>
+      <div class="panel-list"><h2>{{ t('dashboard.breathing.title') }}</h2>{% for item in breathing %}<div class="list-row tall"><span>{{ tc(item.technique) }}</span><b>{{ item.cycles }} {{ t('dashboard.breathing.cycles_lower') }}</b><small>{{ t('dashboard.student.field.mood') }} {{ item.mood_before }} {{ t('dashboard.case.to') }} {{ item.mood_after }} · {{ item.created_at }}</small></div>{% else %}<p class="muted">{{ t('dashboard.breathing.empty') }}</p>{% endfor %}</div>
+    </div>
+
+    <div class="panel-list">
+      <h2>{{ t('dashboard.case.nour_context') }}</h2>
+      {% for item in ai_messages %}
+        <div class="list-row tall">
+          <span>{{ tc(item.role|title) }}</span>
+          <b class="risk {{ item.risk_level }}">{{ tc(item.risk_level) }}</b>
+          <small>{% if item.role == 'nour' %}{{ tc(item.message) }}{% else %}<bdi dir="auto">{{ item.message }}</bdi>{% endif %}</small>
+        </div>
+      {% else %}<p class="muted">{{ t('dashboard.case.no_nour') }}</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

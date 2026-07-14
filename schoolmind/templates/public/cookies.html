@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.cookies.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.cookies.eyebrow') }}</span>
+  <h1>{{ t('public.cookies.heading') }}</h1>
+  <p class="lead">{{ t('public.cookies.lead') }}</p>
+</section>
+<section class="section company-grid three">
+  <article class="company-card"><h3>{{ t('public.cookies.session_title') }}</h3><p>{{ t('public.cookies.session_body') }}</p></article>
+  <article class="company-card"><h3>{{ t('public.cookies.preferences_title') }}</h3><p>{{ t('public.cookies.preferences_body') }}</p></article>
+  <article class="company-card"><h3>{{ t('public.cookies.tracking_title') }}</h3><p>{{ t('public.cookies.tracking_body') }}</p></article>
+</section>
+<section class="section table-card">
+  <table>
+    <caption class="sr-only">{{ t('public.cookies.table_caption') }}</caption>
+    <thead><tr><th scope="col">{{ t('public.cookies.table_type') }}</th><th scope="col">{{ t('public.cookies.table_purpose') }}</th><th scope="col">{{ t('public.cookies.table_default') }}</th></tr></thead>
+    <tbody>
+      {% for row in ('session', 'preferences', 'analytics', 'marketing') %}
+      <tr><td>{{ t('public.cookies.' ~ row ~ '_type') }}</td><td>{{ t('public.cookies.' ~ row ~ '_purpose') }}</td><td>{{ t('public.cookies.' ~ row ~ '_default') }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

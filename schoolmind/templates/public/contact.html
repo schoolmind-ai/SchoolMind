@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.contact.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section company-split">
+  <div>
+    <span class="eyebrow">{{ t('public.contact.eyebrow') }}</span>
+    <h1>{{ t('public.contact.heading') }}</h1>
+    <p class="lead">{{ t('public.contact.lead') }}</p>
+    <div class="company-card">
+      <h2>{{ t('public.contact.warning_title') }}</h2>
+      <p>{{ t('public.contact.warning_body') }} {{ t('public.contact.support_email') }}: {{ support_email }}.</p>
+    </div>
+  </div>
+  <form class="pixel-form" method="post">
+    {% include "partials/form_csrf.html" %}
+    <input type="hidden" name="lead_type" value="contact">
+    <label>{{ t('public.form.name') }}<input name="name" required></label>
+    <label>{{ t('public.form.email') }}<input name="email" type="email" required></label>
+    <label>{{ t('public.form.school') }}<input name="school_name"></label>
+    <label>{{ t('public.form.estimated_students') }}<input name="student_count" inputmode="numeric" placeholder="{{ t('public.form.optional') }}"></label>
+    <label>{{ t('public.contact.reason') }}
+      <select name="preferred_path">
+        <option value="not_sure">{{ t('public.contact.reason_general') }}</option>
+        <option value="demo_first">{{ t('public.contact.reason_demo') }}</option>
+        <option value="self_serve_trial">{{ t('public.contact.reason_trial') }}</option>
+        <option value="guided_pilot">{{ t('public.contact.reason_pilot') }}</option>
+      </select>
+    </label>
+    <label>{{ t('public.form.message') }}<textarea name="message" rows="6" placeholder="{{ t('public.contact.message_placeholder') }}" required></textarea></label>
+    <button class="btn primary" type="submit">{{ t('public.contact.submit') }}</button>
+  </form>
+</section>
+{% endblock %}

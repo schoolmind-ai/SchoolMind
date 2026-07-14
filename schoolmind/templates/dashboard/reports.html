@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.reports.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.reports.eyebrow') }}</span>
+      <h1>{{ t('dashboard.reports.heading') }}</h1>
+      <p>{{ t('dashboard.reports.intro') }}</p>
+    </div>
+    {% with title=t('dashboard.reports.safety_title'), body=t('dashboard.reports.safety_body') %}{% include "partials/ai_safety_notice.html" %}{% endwith %}
+
+    <div class="metric-strip">
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.students') }}</small><strong>{{ totals.students }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.scans') }}</small><strong>{{ totals.assessments }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.average') }}</small><strong>{{ totals.avg_score }}</strong></div>
+      <div class="metric-card {{ 'watch' if totals.assessment_needs_review else 'steady' }}"><small>{{ t('dashboard.reports.metric.needs_review') }}</small><strong>{{ totals.assessment_needs_review }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.total_signals') }}</small><strong>{{ totals.signals }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.open_signals') }}</small><strong>{{ totals.open }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.goals') }}</small><strong>{{ totals.goals }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.games') }}</small><strong>{{ totals.game_sessions }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.breathing') }}</small><strong>{{ totals.breathing_sessions }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.nour') }}</small><strong>{{ totals.ai_messages }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.interventions') }}</small><strong>{{ totals.interventions }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.reports.metric.consent') }}</small><strong>{{ totals.consent }}</strong></div>
+    </div>
+    <div class="dash-grid three">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.reports.risk_distribution') }}</h2>
+        {% for row in risk_rows %}
+          <div class="list-row"><span>{{ tc(row.risk_level) }}</span><b>{{ row.total }}</b><small>{{ t('dashboard.common.signals') }}</small></div>
+        {% else %}<p class="muted">{{ t('dashboard.reports.empty_signals') }}</p>{% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.reports.focus_areas') }}</h2>
+        {% for row in assessment_rows %}
+          <div class="list-row tall">
+            <span>{{ tc(row.primary_need|replace('_', ' ')|title) }}</span>
+            <b>{{ row.total }}</b>
+            <small>{{ t('dashboard.common.average') }} {{ row.avg_score }} · {{ row.needs_review or 0 }} {{ t('dashboard.reports.need_review') }}</small>
+          </div>
+        {% else %}<p class="muted">{{ t('dashboard.common.no_scans_yet') }}</p>{% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.reports.group_summary') }}</h2>
+        {% for row in group_rows %}
+          <div class="list-row tall"><span>{{ row.group_name or t('dashboard.common.unassigned') }}</span><b>{{ row.students }} {{ t('dashboard.common.students') }}</b><small>{{ row.signals }} {{ t('dashboard.common.signals') }} · {{ row.requests }} {{ t('dashboard.common.requests') }}</small></div>
+        {% else %}<p class="muted">{{ t('dashboard.reports.empty_groups') }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="panel-list">
+      <h2>{{ t('dashboard.reports.engagement') }}</h2>
+      {% for row in practice_rows %}
+        <div class="list-row tall">
+          <span>{{ row.group_name or t('dashboard.common.unassigned') }}</span>
+          <b>{{ row.active_goals or 0 }} {{ t('dashboard.common.active_goals') }}</b>
+          <small>{{ row.completed_goals or 0 }} {{ t('dashboard.common.completed_goals') }} · {{ row.game_sessions or 0 }} {{ t('dashboard.common.skill_games') }} · {{ row.breathing_sessions or 0 }} {{ t('dashboard.common.breathing_sessions') }}</small>
+        </div>
+      {% else %}<p class="muted">{{ t('dashboard.common.no_practice') }}</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

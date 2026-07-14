@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.implementation.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.implementation.eyebrow') }}</span>
+  <h1>{{ t('public.implementation.heading') }}</h1>
+  <p class="lead">{{ t('public.implementation.lead') }}</p>
+</section>
+<section class="company-grid four">
+  {% for step in ('prepare', 'configure', 'invite', 'review') %}
+  <article class="company-card"><span class="pixel-icon">{{ loop.index }}</span><h3>{{ t('public.implementation.' ~ step ~ '_title') }}</h3><p>{{ t('public.implementation.' ~ step ~ '_body') }}</p></article>
+  {% endfor %}
+</section>
+{% endblock %}

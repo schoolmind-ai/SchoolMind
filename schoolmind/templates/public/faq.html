@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ t('faq.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('faq.eyebrow') }}</span>
+  <h1>{{ t('faq.heading') }}</h1>
+</section>
+<section class="section faq-list">
+  <details class="faq-item" open><summary>{{ t('faq.diagnosis.question') }}</summary><p>{{ t('faq.diagnosis.answer') }}</p></details>
+  <details class="faq-item"><summary>{{ t('faq.demo.question') }}</summary><p>{{ t('faq.demo.answer') }}</p></details>
+  <details class="faq-item"><summary>{{ t('faq.language.question') }}</summary><p>{{ t('faq.language.answer') }}</p></details>
+  <details class="faq-item"><summary>{{ t('faq.trial.question') }}</summary><p>{{ t('faq.trial.answer') }}</p></details>
+  <details class="faq-item"><summary>{{ t('faq.limit.question') }}</summary><p>{{ t('faq.limit.answer') }}</p></details>
+</section>
+{% endblock %}

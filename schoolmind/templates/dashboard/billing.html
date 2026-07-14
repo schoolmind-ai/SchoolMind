@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.billing.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main billing-workspace">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.billing.title') }}</span>
+      <h1>{{ t('dashboard.billing.heading') }}</h1>
+      <p>{{ t('dashboard.billing.current_plan') }}: <strong>{{ t('public.pricing.plan_' ~ subscription.plan) if subscription else t('dashboard.billing.none') }}</strong> · {{ t('dashboard.billing.status') }}: <strong>{{ tc(subscription.status) if subscription else t('dashboard.billing.none') }}</strong> · {{ t('dashboard.billing.price') }}: <strong><bdi>${{ subscription.monthly_price if subscription else 0 }}/{{ t('dashboard.billing.month_short') }}</bdi></strong></p>
+    </div>
+
+    <div class="pixel-board wide billing-policy-board">
+      <h2>{{ t('dashboard.billing.policy') }}</h2>
+      <p class="muted">{{ t('dashboard.billing.policy_body') }}</p>
+      <div class="metric-strip">
+        <div><span>{{ t('dashboard.billing.trial') }}</span><b>30 {{ t('dashboard.billing.days') }}</b></div>
+        <div><span>{{ t('dashboard.billing.title') }}</span><b>{{ t('dashboard.billing.cycles') }}</b></div>
+        <div><span>{{ t('dashboard.billing.pricing') }}</span><b>{{ t('dashboard.billing.per_school') }}</b></div>
+        <div><span>{{ t('dashboard.billing.extra_seats') }}</span><b>{{ t('dashboard.billing.approved_first') }}</b></div>
+      </div>
+    </div>
+
+    <div class="pricing-grid dashboard-pricing">
+      {% for plan in pricing_catalog %}
+      <article class="price-card {% if subscription and subscription.plan == plan.key %}featured{% endif %}">
+        <span class="eyebrow">{{ plan.name }}</span>
+        {% if plan.is_custom %}
+          <h2>{{ t('dashboard.billing.custom') }}</h2>
+          <p>{{ plan.limits }}</p>
+          <p class="muted">{{ plan.extra_student_note }}</p>
+          <a class="btn primary" href="{{ url_for('public.request_demo') }}">{{ t('dashboard.billing.request_pilot') }}</a>
+        {% else %}
+          <h2>${{ plan.monthly_price }}<small>/{{ t('dashboard.billing.month_short') }}</small></h2>
+          <p>{{ t('dashboard.billing.six_months') }}: ${{ plan.six_month_price }} · {{ t('dashboard.billing.annual') }}: ${{ plan.annual_price }}/{{ t('dashboard.billing.year') }} · {{ t('dashboard.billing.about') }} ${{ plan.annual_effective_monthly }}/{{ t('dashboard.billing.month_short') }}.</p>
+          <p>{{ plan.limits }} · {{ t('dashboard.billing.staff_limit') }}: {{ plan.staff_limit }}</p>
+          <p class="muted">{{ t('dashboard.billing.extra_students') }}: {{ plan.extra_student_fee }}</p>
+          <ul>{% for feature in plan.features %}<li>{{ feature }}</li>{% endfor %}</ul>
+          <div class="row-actions stacked-actions">
+            <a class="btn primary" href="{{ url_for('dashboard.billing_checkout', plan=plan.key, billing_cycle='monthly') }}">{{ t('dashboard.billing.checkout_monthly') }}</a>
+            <a class="btn ghost" href="{{ url_for('dashboard.billing_checkout', plan=plan.key, billing_cycle='six_month') }}">{{ t('dashboard.billing.checkout_six') }}</a>
+            <a class="btn ghost" href="{{ url_for('dashboard.billing_checkout', plan=plan.key, billing_cycle='annual') }}">{{ t('dashboard.billing.checkout_annual') }}</a>
+          </div>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="dash-grid two">
+      {% if allow_manual_billing %}
+      <form class="pixel-form compact" method="post" action="{{ url_for('dashboard.billing_manual_activate') }}">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.billing.manual_activation') }}</h2>
+        <p class="muted">{{ t('dashboard.billing.manual_body') }}</p>
+        <label>{{ t('dashboard.billing.plan') }}<select name="plan">{% for key, plan in plans.items() %}<option value="{{ key }}">{{ plan.name }}</option>{% endfor %}</select></label>
+        <label>{{ t('dashboard.billing.coupon_code') }}<input name="coupon_code" placeholder="PILOT25"></label>
+        <label>{{ t('dashboard.billing.reference') }}<input name="reference" placeholder="{{ t('dashboard.billing.reference_placeholder') }}"></label>
+        <button class="btn ghost" type="submit">{{ t('dashboard.billing.record_activation') }}</button>
+      </form>
+      {% else %}
+      <form class="pixel-board wide locked-billing-form" method="post" action="{{ url_for('dashboard.billing_manual_activate') }}" aria-label="{{ t('dashboard.billing.locked_aria') }}">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.billing.provider_required') }}</h2>
+        <p class="muted">{{ t('dashboard.billing.provider_body') }}</p>
+        <div class="locked-form-grid" aria-hidden="true">
+          <span>{{ t('dashboard.billing.plan') }}</span><b>{{ t('dashboard.billing.locked') }}</b>
+          <span>{{ t('dashboard.billing.coupon') }}</span><b>{{ t('dashboard.billing.provider_verified') }}</b>
+          <span>{{ t('dashboard.billing.reference') }}</span><b>{{ t('dashboard.billing.required_after_payment') }}</b>
+        </div>
+        <button class="btn ghost" type="button" disabled>{{ t('dashboard.billing.manual_locked') }}</button>
+      </form>
+      {% endif %}
+      <div class="pixel-board wide checkout-status-board">
+        <h2>{{ t('dashboard.billing.checkout_config') }}</h2>
+        {% for key, plan in plans.items() %}
+          <div class="board-row"><span>{{ key|upper }} {{ t('dashboard.billing.monthly') }}</span><b>{{ t('dashboard.billing.set') if checkout[key].monthly else t('dashboard.billing.missing') }}</b></div>
+          <div class="board-row"><span>{{ key|upper }} {{ t('dashboard.billing.six_months') }}</span><b>{{ t('dashboard.billing.set') if checkout[key].six_month else t('dashboard.billing.missing') }}</b></div>
+          <div class="board-row"><span>{{ key|upper }} {{ t('dashboard.billing.annual') }}</span><b>{{ t('dashboard.billing.set') if checkout[key].annual else t('dashboard.billing.missing') }}</b></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel-list">
+      <h2>{{ t('dashboard.billing.available_coupons') }}</h2>
+      {% for coupon in coupons %}
+        <div class="list-row tall"><span>{{ coupon.code }} · {{ coupon.discount_percent }}%</span><b>{{ coupon.applies_to_plan }}</b><small>{{ coupon.description }} · {{ t('dashboard.billing.expires') }} {{ coupon.expires_at or t('dashboard.billing.not_set') }}</small></div>
+      {% else %}<p class="muted">{{ t('dashboard.billing.no_coupons') }}</p>{% endfor %}
+    </div>
+    <div class="panel-list">
+      <h2>{{ t('dashboard.billing.events') }}</h2>
+      {% for event in events %}<div class="list-row tall"><span>{{ tc(event.event_type) }} · {{ t('public.pricing.plan_' ~ event.plan) }}</span><b><bdi>${{ event.amount }}</bdi></b><small><bdi dir="auto">{{ event.note }}</bdi> <bdi>{{ event.provider_reference or '' }}</bdi> · {{ event.created_at }}</small></div>{% else %}<p class="muted">{{ t('dashboard.billing.no_events') }}</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

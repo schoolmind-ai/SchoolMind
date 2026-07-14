@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.database.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.database.eyebrow') }}</span>
+      <h1>{{ t('dashboard.database.title') }}</h1>
+      <p>{{ t('dashboard.database.intro') }}</p>
+    </div>
+
+    <div class="metric-strip">
+      <div class="metric-card"><small>{{ t('dashboard.database.engine') }}</small><strong>{{ report.engine }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.database.environment') }}</small><strong>{{ report.app_env }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.database.storage') }}</small><strong>{{ t('dashboard.database.ready') if report.exists else t('dashboard.operations.missing') }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.database.size') }}</small><strong>{{ report.size_bytes }} B</strong></div>
+    </div>
+
+    <div class="panel-list">
+      <h2>{{ t('dashboard.database.runtime') }}</h2>
+      <div class="list-row tall"><span>{{ t('dashboard.database.target') }}</span><b>{{ report.path }}</b><small>{{ t('dashboard.database.parent_provider') }}: {{ report.parent }}</small></div>
+      <div class="list-row tall"><span>DATABASE_URL {{ t('dashboard.database.present') }}</span><b>{{ t('dashboard.backups.yes') if report.database_url_present else t('dashboard.backups.no') }}</b><small>{{ t('dashboard.database.url_note') }}</small></div>
+      {% if report.database_url_safe %}<div class="list-row tall"><span>{{ t('dashboard.database.masked_url') }}</span><b>{{ report.database_url_safe }}</b><small>{{ t('dashboard.database.credentials_note') }}</small></div>{% endif %}
+    </div>
+
+    <div class="panel-list postgres-readiness-panel">
+      <h2>{{ t('dashboard.database.postgres_readiness') }}</h2>
+      <div class="list-row tall"><span>{{ t('dashboard.database.host') }}</span><b>{{ report.postgres_settings.host or t('dashboard.database.not_detected') }}</b><small>{{ t('dashboard.database.looks_supabase') if report.postgres_settings.looks_like_supabase else t('dashboard.database.verify_provider') }}</small></div>
+      <div class="list-row tall"><span>{{ t('dashboard.database.pooler') }}</span><b>{{ report.postgres_settings.pooling_mode }}</b><small>{% if report.postgres_settings.looks_like_pooler %}{{ t('dashboard.database.pooler_yes') }}{% else %}{{ t('dashboard.database.pooler_no') }}{% endif %}</small></div>
+      <div class="list-row tall"><span>{{ t('dashboard.database.tls') }}</span><b>{{ report.postgres_settings.sslmode or t('dashboard.billing.not_set') }}</b><small>{{ t('dashboard.database.tls_note') }}</small></div>
+      <div class="list-row tall"><span>{{ t('dashboard.database.timeouts') }}</span><b>{{ report.postgres_settings.connect_timeout_seconds }}s / {{ report.postgres_settings.statement_timeout_ms }}ms</b><small>{{ t('dashboard.database.timeouts_note') }}</small></div>
+      <div class="list-row tall"><span>{{ t('dashboard.database.app_name') }}</span><b>{{ report.postgres_settings.application_name }}</b><small>{{ t('dashboard.database.app_note') }}</small></div>
+    </div>
+
+    <div class="panel-list">
+      <h2>{{ t('dashboard.database.checks') }}</h2>
+      {% for item in report.checks %}
+        <div class="list-row tall status-{{ item.status }}">
+          <span>{{ tc(item.name) }}</span>
+          <b>{{ tc(item.status) }}</b>
+          <small>{{ tc(item.detail) }}</small>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="dash-grid two">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.database.table_counts') }}</h2>
+        {% for item in counts %}
+          <div class="list-row"><span>{{ item.table }}{% if item.scoped %} <small>{{ t('dashboard.database.school_scoped') }}</small>{% endif %}</span><b>{{ item.total }}</b></div>
+        {% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.database.release_scan') }}</h2>
+        {% if release_findings %}
+          {% for item in release_findings[:12] %}
+            <div class="list-row tall status-blocker"><span>{{ item.path }}</span><b>{{ t('dashboard.database.block') }}</b><small>{{ item.issue }}</small></div>
+          {% endfor %}
+        {% else %}
+          <div class="list-row tall status-pass"><span>{{ t('dashboard.database.no_artifacts') }}</span><b>{{ t('dashboard.database.pass') }}</b><small>{{ t('dashboard.database.clean_tree') }}</small></div>
+        {% endif %}
+        <a class="btn ghost" href="{{ url_for('dashboard.admin_backups') }}">{{ t('dashboard.operations.open_backups') }}</a>
+      </div>
+    </div>
+
+    <div class="panel-list">
+      <h2>{{ t('dashboard.database.production_inputs') }}</h2>
+      {% for item in report.production_env_vars %}
+        <div class="list-row"><span>{{ item }}</span><b>{{ t('dashboard.database.required') }}</b></div>
+      {% endfor %}
+      <p class="microcopy">{{ t('dashboard.database.secrets_note') }}</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

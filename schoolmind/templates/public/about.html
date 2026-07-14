@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.about.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section company-split">
+  <div>
+    <span class="eyebrow">{{ t('public.about.eyebrow') }}</span>
+    <h1>{{ t('public.about.heading') }}</h1>
+    <p class="lead">{{ t('public.about.lead') }}</p>
+    <p class="muted">{{ t('public.about.note') }}</p>
+  </div>
+  <div class="company-image"><picture class="smart-picture"><source srcset="{{ url_for('static', filename='img/pages/01_schoolmind_logo_concept.webp') }}" type="image/webp"><img src="{{ url_for('static', filename='img/pages/01_schoolmind_logo_concept.png') }}" alt="{{ t('public.about.image_alt') }}" loading="lazy" decoding="async" width="426" height="362"></picture></div>
+</section>
+<section class="section">
+  <div class="company-grid three">
+    <article class="company-card"><h3>{{ t('public.about.mission_title') }}</h3><p>{{ t('public.about.mission_body') }}</p></article>
+    <article class="company-card"><h3>{{ t('public.about.boundary_title') }}</h3><p>{{ t('public.about.boundary_body') }}</p></article>
+    <article class="company-card"><h3>{{ t('public.about.direction_title') }}</h3><p>{{ t('public.about.direction_body') }}</p></article>
+  </div>
+</section>
+{% endblock %}

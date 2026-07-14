@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ t('platform.school.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<section class="dash-main">
+  <div class="dash-head">
+    <span class="eyebrow">{{ t('platform.school.eyebrow') }}</span>
+    <h1>{{ school.name }}</h1>
+    <p><bdi>{{ school.slug }}</bdi> · {{ school.country }} · {{ t('public.pricing.plan_' ~ school.plan) }} · {{ tc(school.status) }}</p>
+  </div>
+  <div class="metric-strip">
+    <div class="metric-card"><small>{{ t('dashboard.common.students') }}</small><strong>{{ counts.students }}</strong></div>
+    <div class="metric-card"><small>{{ t('platform.school.staff') }}</small><strong>{{ counts.staff }}</strong></div>
+    <div class="metric-card urgent"><small>{{ t('platform.home.open_signals') }}</small><strong>{{ counts.open_events }}</strong></div>
+    <div class="metric-card watch"><small>{{ t('platform.school.queued_email') }}</small><strong>{{ counts.queued_email }}</strong></div>
+  </div>
+
+  <div class="panel-list">
+    <h2>{{ t('platform.school.operational_status') }}</h2>
+    <form class="form-grid" method="post" action="{{ url_for('platform.platform_school_status', school_id=school.id) }}" data-confirm="{{ t('platform.school.confirm_status') }}">
+      {% include "partials/form_csrf.html" %}
+      <label>{{ t('dashboard.billing.status') }}
+        <select name="status">
+          {% for status in ['trial', 'active', 'past_due', 'suspended', 'cancelled'] %}
+            <option value="{{ status }}" {% if school.status == status %}selected{% endif %}>{{ t('platform.status.' ~ status) }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button class="btn primary" type="submit">{{ t('platform.school.update_status') }}</button>
+    </form>
+    {% if settings %}
+      <p class="muted">{{ t('dashboard.student.support_owner') }}: {{ settings.support_owner or t('dashboard.operations.missing') }} · SLA: {{ settings.escalation_window_minutes }} {{ t('dashboard.playbooks.minutes') }} · {{ t('dashboard.backups.retention') }}: {{ settings.data_retention_days }} {{ t('dashboard.backups.days') }}</p>
+    {% endif %}
+  </div>
+
+  <div class="dash-grid two">
+    <div class="panel-list">
+      <h2>{{ t('platform.home.users') }}</h2>
+      {% for user in users %}
+        <div class="list-row tall">
+          <div><strong>{{ user.name }}</strong><small>{{ user.email }} · {{ t('role.' ~ user.role) }} · {{ t('dashboard.common.active') }}: {{ user.is_active }} · {{ t('dashboard.security.last_login') }}: {{ user.last_login_at or t('dashboard.security.never') }}</small></div>
+          <span>{{ t('platform.school.locked') if user.locked_until else t('platform.school.ok') }}</span>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="panel-list">
+      <h2>{{ t('platform.school.audit') }}</h2>
+      {% for item in audit %}
+        <div class="list-row tall"><div><strong>{{ item.action }}</strong><small>{{ item.detail }} · {{ item.created_at }}</small></div></div>
+      {% else %}<p class="muted">{{ t('platform.school.no_audit') }}</p>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

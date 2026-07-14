@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "partials/ui_macros.html" import workspace_visual %}
+{% block title %}{{ t('public.features.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.features.eyebrow') }}</span>
+  <h1>{{ t('public.features.heading') }}</h1>
+  <p class="lead">{{ t('public.features.lead') }}</p>
+</section>
+<section class="section company-grid three feature-catalog">
+  {% for item in ('demo', 'trial', 'bilingual', 'student', 'nour', 'teacher', 'counselor', 'admin', 'audit') %}
+  <article class="company-card"><h3>{{ t('public.features.' ~ item ~ '_title') }}</h3><p>{{ t('public.features.' ~ item ~ '_body') }}</p></article>
+  {% endfor %}
+</section>
+<section class="section company-split">
+  {{ workspace_visual() }}
+  <div>
+    <span class="eyebrow">{{ t('public.features.discipline_eyebrow') }}</span>
+    <h2>{{ t('public.features.discipline_heading') }}</h2>
+    <p class="lead">{{ t('public.features.discipline_body') }}</p>
+    <div class="row-actions"><a class="btn primary" href="{{ url_for('public.safety') }}">{{ t('public.features.safety_link') }}</a><a class="btn ghost" href="{{ url_for('public.human_review') }}">{{ t('public.features.human_review_link') }}</a></div>
+  </div>
+</section>
+{% endblock %}

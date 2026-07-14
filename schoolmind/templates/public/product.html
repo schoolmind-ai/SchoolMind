@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% from "partials/ui_macros.html" import workspace_visual %}
+{% block title %}{{ t('public.product.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.product.eyebrow') }}</span>
+  <h1>{{ t('public.product.heading') }}</h1>
+  <p class="lead">{{ t('public.product.lead') }}</p>
+  <div class="hero-actions"><a class="btn primary" href="{{ url_for('public.try_demo') }}">{{ t('public.common.try_instantly') }}</a><a class="btn ghost" href="{{ url_for('public.request_demo') }}">{{ t('public.common.request_guided_demo') }}</a></div>
+</section>
+<section class="section company-split">
+  <div>
+    <span class="eyebrow">{{ t('public.product.architecture_eyebrow') }}</span>
+    <h2>{{ t('public.product.architecture_heading') }}</h2>
+    <p class="lead">{{ t('public.product.architecture_body') }}</p>
+    <ul class="company-list">
+      <li>{{ t('public.product.architecture_point_1') }}</li>
+      <li>{{ t('public.product.architecture_point_2') }}</li>
+      <li>{{ t('public.product.architecture_point_3') }}</li>
+      <li>{{ t('public.product.architecture_point_4') }}</li>
+    </ul>
+  </div>
+  {{ workspace_visual() }}
+</section>
+<section class="section">
+  <div class="section-head">
+    <span class="eyebrow">{{ t('public.product.modules_eyebrow') }}</span>
+    <h2>{{ t('public.product.modules_heading') }}</h2>
+  </div>
+  <div class="company-grid four page-directory">
+    <article class="company-card"><span class="pixel-icon">01</span><h3>{{ t('public.product.student_title') }}</h3><p>{{ t('public.product.student_body') }}</p><a href="{{ url_for('public.students') }}">{{ t('public.product.student_link') }}</a></article>
+    <article class="company-card"><span class="pixel-icon">02</span><h3>{{ t('public.product.teacher_title') }}</h3><p>{{ t('public.product.teacher_body') }}</p><a href="{{ url_for('public.teachers') }}">{{ t('public.product.teacher_link') }}</a></article>
+    <article class="company-card"><span class="pixel-icon">03</span><h3>{{ t('public.product.counselor_title') }}</h3><p>{{ t('public.product.counselor_body') }}</p><a href="{{ url_for('public.counselors') }}">{{ t('public.product.counselor_link') }}</a></article>
+    <article class="company-card"><span class="pixel-icon">04</span><h3>{{ t('public.product.admin_title') }}</h3><p>{{ t('public.product.admin_body') }}</p><a href="{{ url_for('public.schools') }}">{{ t('public.product.admin_link') }}</a></article>
+  </div>
+</section>
+<section class="section table-card">
+  <table>
+    <caption class="sr-only">{{ t('public.product.table_caption') }}</caption>
+    <thead><tr><th scope="col">{{ t('public.product.table_layer') }}</th><th scope="col">{{ t('public.product.table_does') }}</th><th scope="col">{{ t('public.product.table_avoids') }}</th></tr></thead>
+    <tbody>
+      <tr><td>{{ t('public.product.table_ai_layer') }}</td><td>{{ t('public.product.table_ai_does') }}</td><td>{{ t('public.product.table_ai_avoids') }}</td></tr>
+      <tr><td>{{ t('public.product.table_roles_layer') }}</td><td>{{ t('public.product.table_roles_does') }}</td><td>{{ t('public.product.table_roles_avoids') }}</td></tr>
+      <tr><td>{{ t('public.product.table_governance_layer') }}</td><td>{{ t('public.product.table_governance_does') }}</td><td>{{ t('public.product.table_governance_avoids') }}</td></tr>
+    </tbody>
+  </table>
+</section>
+{% endblock %}

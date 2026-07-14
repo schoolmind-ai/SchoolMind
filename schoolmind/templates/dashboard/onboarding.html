@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.onboarding.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<div class="dashboard-layout onboarding-workspace">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head launch-head">
+      <span class="eyebrow">{{ t('dashboard.onboarding.title') }}</span>
+      <h1>{{ done }}/{{ total }} {{ t('dashboard.onboarding.blockers_cleared') }}</h1>
+      <p>{{ t('dashboard.onboarding.intro') }}</p>
+      <div class="stacked-actions">
+        <a class="btn primary" href="{{ url_for('dashboard.admin_import') }}">{{ t('dashboard.onboarding.import_roster') }}</a>
+        <a class="btn ghost" href="{{ url_for('dashboard.admin_invites') }}">{{ t('dashboard.onboarding.invite_staff') }}</a>
+        <a class="btn ghost" href="{{ url_for('dashboard.admin_consent') }}">{{ t('dashboard.onboarding.review_consent') }}</a>
+      </div>
+    </div>
+
+    <div class="launch-score-card readiness-{{ onboarding.readiness }}">
+      <div>
+        <span class="eyebrow">{{ t('dashboard.onboarding.readiness_score') }}</span>
+        <strong>{{ onboarding.percent }}%</strong>
+        <p>{{ t('dashboard.onboarding.ready_review') if onboarding.can_mark_ready else t('dashboard.onboarding.not_ready') }}</p>
+      </div>
+      <progress value="{{ done }}" max="{{ total }}">{{ onboarding.percent }}%</progress>
+      <div class="launch-status-grid">
+        <div><small>{{ t('dashboard.onboarding.launch_stage') }}</small><b>{{ tc(settings.launch_stage|replace('_', ' ')|title) }}</b></div>
+        <div><small>{{ t('dashboard.onboarding.launch_path') }}</small><b>{{ tc(settings.launch_mode|replace('_', ' ')|title) }}</b></div>
+        <div><small>{{ t('dashboard.onboarding.primary_language') }}</small><b>{{ settings.launch_language|upper }}</b></div>
+        <div><small>{{ t('dashboard.onboarding.trial_plan') }}</small><b>{{ subscription.plan|title if subscription else t('dashboard.operations.missing') }}</b></div>
+      </div>
+    </div>
+
+    {% if onboarding.next_task %}
+      <div class="pilot-alert">
+        <strong>{{ t('dashboard.onboarding.next_action') }}: {{ tc(onboarding.next_task.title) }}</strong>
+        <span>{{ tc(onboarding.next_task.summary) }}</span>
+        <a class="btn ghost" href="{{ url_for(onboarding.next_task.endpoint) }}">{{ tc(onboarding.next_task.action_label) }}</a>
+      </div>
+    {% else %}
+      <div class="pilot-alert positive">
+        <strong>{{ t('dashboard.onboarding.checklist_complete') }}</strong>
+        <span>{{ t('dashboard.onboarding.checklist_note') }}</span>
+      </div>
+    {% endif %}
+
+    <div class="metric-strip launch-metrics">
+      <div class="metric-card"><small>{{ t('dashboard.onboarding.expected_students') }}</small><strong>{{ settings.expected_students }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.onboarding.actual_students') }}</small><strong>{{ counts.students }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.onboarding.staff') }}</small><strong>{{ counts.teachers + counts.counselors + counts.admins }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.onboarding.invites') }}</small><strong>{{ invite_count }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.onboarding.consent_records') }}</small><strong>{{ consent_count }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.onboarding.import_batches') }}</small><strong>{{ import_count }}</strong></div>
+    </div>
+
+    <div class="dash-grid two launch-setup-grid">
+      <form class="pixel-form compact launch-profile-form" method="post">
+        {% include "partials/form_csrf.html" %}
+        <input type="hidden" name="action" value="launch_profile">
+        <h2>1. {{ t('dashboard.onboarding.launch_profile') }}</h2>
+        <p class="muted">{{ t('dashboard.onboarding.profile_note') }}</p>
+        <div class="form-grid">
+          <label>{{ t('dashboard.onboarding.country_region') }}<input name="country" value="{{ school.country }}" required></label>
+          <label>{{ t('dashboard.onboarding.primary_launch_language') }}
+            <select name="launch_language">
+              <option value="en" {% if settings.launch_language == 'en' %}selected{% endif %}>{{ t('dashboard.onboarding.english') }}</option>
+              <option value="ar" {% if settings.launch_language == 'ar' %}selected{% endif %}>{{ t('dashboard.onboarding.arabic') }}</option>
+            </select>
+          </label>
+          <label>{{ t('dashboard.onboarding.launch_path') }}
+            <select name="launch_mode">
+              <option value="instant_demo" {% if settings.launch_mode == 'instant_demo' %}selected{% endif %}>{{ t('dashboard.onboarding.instant_demo') }}</option>
+              <option value="self_serve_trial" {% if settings.launch_mode == 'self_serve_trial' %}selected{% endif %}>{{ t('dashboard.onboarding.self_trial') }}</option>
+              <option value="guided_pilot" {% if settings.launch_mode == 'guided_pilot' %}selected{% endif %}>{{ t('dashboard.onboarding.guided_pilot') }}</option>
+              <option value="district_rollout" {% if settings.launch_mode == 'district_rollout' %}selected{% endif %}>{{ t('dashboard.onboarding.district') }}</option>
+            </select>
+          </label>
+          <label>{{ t('dashboard.onboarding.expected_students') }}<input name="expected_students" type="number" min="0" max="100000" value="{{ settings.expected_students }}"></label>
+          <label>{{ t('dashboard.onboarding.expected_staff') }}<input name="expected_staff" type="number" min="0" max="10000" value="{{ settings.expected_staff }}"></label>
+          <label>{{ t('dashboard.onboarding.approval_owner') }}<input name="approval_owner" value="{{ settings.approval_owner }}" placeholder="{{ t('dashboard.onboarding.approval_placeholder') }}"></label>
+          <label>{{ t('dashboard.onboarding.data_owner') }}<input name="data_owner" value="{{ settings.data_owner }}" placeholder="{{ t('dashboard.onboarding.data_placeholder') }}"></label>
+          <label>{{ t('dashboard.onboarding.support_inbox') }}<input name="support_email" type="email" value="{{ settings.support_email }}" placeholder="support-team@school.edu"></label>
+        </div>
+        <label>{{ t('dashboard.onboarding.launch_goal') }}<textarea name="pilot_goal" rows="4" placeholder="{{ t('dashboard.onboarding.goal_placeholder') }}">{{ settings.pilot_goal }}</textarea></label>
+        <button class="btn primary" type="submit">{{ t('dashboard.onboarding.save_profile') }}</button>
+      </form>
+
+      <div class="panel-list launch-owner-map">
+        <h2>2. {{ t('dashboard.onboarding.owner_map') }}</h2>
+        <div class="list-row tall"><span>{{ t('dashboard.onboarding.approval_owner') }}</span><b>{{ settings.approval_owner or t('dashboard.operations.missing') }}</b><small>{{ t('dashboard.onboarding.approval_note') }}</small></div>
+        <div class="list-row tall"><span>{{ t('dashboard.onboarding.data_owner') }}</span><b>{{ settings.data_owner or t('dashboard.operations.missing') }}</b><small>{{ t('dashboard.onboarding.data_note') }}</small></div>
+        <div class="list-row tall"><span>{{ t('dashboard.onboarding.support_inbox') }}</span><b>{{ settings.support_email or t('dashboard.operations.missing') }}</b><small>{{ t('dashboard.onboarding.inbox_note') }}</small></div>
+        <div class="list-row tall"><span>{{ t('dashboard.student.support_owner') }}</span><b>{{ settings.support_owner or t('dashboard.operations.missing') }}</b><small>{{ t('dashboard.onboarding.support_note') }}</small></div>
+      </div>
+    </div>
+
+    <div class="panel-list launch-checklist">
+      <h2>3. {{ t('dashboard.onboarding.operational_checklist') }}</h2>
+      {% for task in tasks %}
+        <div class="list-row tall launch-task {{ 'done' if completed[task.key] else 'missing' }}">
+          <span>{{ tc(task.title) }}</span>
+          <b class="risk {{ 'steady' if completed[task.key] else 'support' }}">{{ t('dashboard.onboarding.done') if completed[task.key] else t('dashboard.operations.missing') }}</b>
+          <small>{{ tc(task.category) }} · {{ tc(task.summary) }}</small>
+          <a class="btn ghost" href="{{ url_for(task.endpoint) }}">{{ tc(task.action_label) }}</a>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="dash-grid three launch-routing-grid">
+      <a class="feature-card clickable" href="{{ url_for('dashboard.admin_settings') }}"><span class="pixel-icon">01</span><h3>{{ t('dashboard.onboarding.policy_settings') }}</h3><p>{{ t('dashboard.onboarding.policy_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.admin_invites') }}"><span class="pixel-icon">02</span><h3>{{ t('dashboard.onboarding.staff_invites') }}</h3><p>{{ t('dashboard.onboarding.staff_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.admin_import') }}"><span class="pixel-icon">03</span><h3>{{ t('dashboard.onboarding.roster_import') }}</h3><p>{{ t('dashboard.onboarding.roster_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.admin_billing') }}"><span class="pixel-icon">04</span><h3>{{ t('dashboard.onboarding.billing_path') }}</h3><p>{{ t('dashboard.onboarding.billing_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.admin_operations') }}"><span class="pixel-icon">05</span><h3>{{ t('dashboard.onboarding.operations') }}</h3><p>{{ t('dashboard.onboarding.operations_body') }}</p></a>
+      <a class="feature-card clickable" href="{{ url_for('dashboard.admin_database') }}"><span class="pixel-icon">06</span><h3>{{ t('dashboard.onboarding.database') }}</h3><p>{{ t('dashboard.onboarding.database_body') }}</p></a>
+    </div>
+
+    <div class="dash-grid two launch-controls">
+      <form class="pixel-form compact" method="post">
+        {% include "partials/form_csrf.html" %}
+        <input type="hidden" name="action" value="mark_ready">
+        <h2>{{ t('dashboard.onboarding.mark_ready') }}</h2>
+        <p class="muted">{{ t('dashboard.onboarding.mark_note') }}</p>
+        <button class="btn primary" type="submit" {% if not onboarding.can_mark_ready %}disabled{% endif %}>{{ t('dashboard.onboarding.mark_button') }}</button>
+      </form>
+      <form class="pixel-form compact danger-zone" method="post" data-confirm="{{ t('dashboard.onboarding.reset_confirm') }}">
+        {% include "partials/form_csrf.html" %}
+        <input type="hidden" name="action" value="reset_launch">
+        <h2>{{ t('dashboard.onboarding.reset_title') }}</h2>
+        <p class="muted">{{ t('dashboard.onboarding.reset_note') }}</p>
+        <button class="btn ghost" type="submit">{{ t('dashboard.onboarding.reset_button') }}</button>
+      </form>
+    </div>
+  </section>
+</div>
+{% endblock %}

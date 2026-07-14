@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.operations.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.operations.title') }}</span>
+      <h1>{{ t('dashboard.operations.heading') }}</h1>
+      <p>{{ t('dashboard.operations.intro') }}</p>
+    </div>
+    <div class="metric-strip">
+      <div class="metric-card"><small>{{ t('dashboard.operations.student_seats') }}</small><strong>{{ usage.students }}/{{ usage.student_limit }}</strong><progress class="meter-progress" value="{{ usage.student_percent }}" max="100">{{ usage.student_percent }}%</progress></div>
+      <div class="metric-card"><small>{{ t('dashboard.operations.staff_seats') }}</small><strong>{{ usage.staff }}/{{ usage.staff_limit }}</strong><progress class="meter-progress" value="{{ usage.staff_percent }}" max="100">{{ usage.staff_percent }}%</progress></div>
+      <div class="metric-card {{ 'urgent' if overdue else 'steady' }}"><small>{{ t('dashboard.operations.sla_overdue') }}</small><strong>{{ overdue }}</strong></div>
+      <div class="metric-card"><small>{{ t('dashboard.operations.open_events') }}</small><strong>{{ counts.open_events }}</strong></div>
+    </div>
+    <div class="dash-grid two">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.operations.production_checks') }}</h2>
+        {% for check in config_checks %}
+          <div class="list-row tall {{ 'danger-zone' if not check.ok else '' }}"><span>{{ tc(check.name) }}</span><b>{{ t('dashboard.operations.ok') if check.ok else t('dashboard.operations.fix') }}</b><small>{{ tc(check.detail) }}</small></div>
+        {% endfor %}
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.operations.email_queue') }}</h2>
+        <div class="list-row"><span>{{ t('dashboard.operations.queued') }}</span><b>{{ outbox.queued or 0 }}</b></div>
+        <div class="list-row"><span>{{ t('dashboard.operations.sent') }}</span><b>{{ outbox.sent or 0 }}</b></div>
+        <div class="list-row"><span>{{ t('dashboard.operations.failed') }}</span><b>{{ outbox.failed or 0 }}</b></div>
+        <a class="btn ghost" href="{{ url_for('dashboard.admin_outbox') }}">{{ t('dashboard.operations.open_outbox') }}</a>
+      </div>
+    </div>
+    <div class="dash-grid two">
+      <div class="panel-list">
+        <h2>{{ t('dashboard.operations.data_operations') }}</h2>
+        <a class="btn ghost" href="{{ url_for('dashboard.admin_backups') }}">{{ t('dashboard.operations.open_backups') }}</a>
+        <a class="btn ghost" href="{{ url_for('api.export_workspace_json') }}">{{ t('dashboard.operations.download_backup') }}</a>
+        <form method="post" action="{{ url_for('dashboard.admin_run_retention') }}" data-confirm="{{ t('dashboard.settings.cleanup_confirm') }}">
+          {% include "partials/form_csrf.html" %}
+          <button class="btn ghost" type="submit">{{ t('dashboard.settings.cleanup_title') }}</button>
+        </form>
+      </div>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.operations.escalation_settings') }}</h2>
+        <div class="list-row tall"><span>{{ t('dashboard.student.support_owner') }}</span><b>{{ settings.support_owner or t('dashboard.operations.missing') }}</b><small>{{ t('dashboard.operations.configured_settings') }}</small></div>
+        <div class="list-row tall"><span>{{ t('dashboard.operations.escalation_window') }}</span><b>{{ settings.escalation_window_minutes }} {{ t('dashboard.playbooks.minutes') }}</b><small>{{ t('dashboard.operations.window_note') }}</small></div>
+        <a class="btn ghost" href="{{ url_for('dashboard.admin_settings') }}">{{ t('dashboard.operations.update_settings') }}</a>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

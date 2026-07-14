@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.tips.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head"><span class="eyebrow">{{ t('dashboard.tips.title') }}</span><h1>{{ t('dashboard.tips.heading') }}</h1><p>{% if latest %}{{ t('dashboard.tips.based_on') }}: {{ tc(latest.primary_need|replace('_', ' ')|title) }}.{% else %}{{ t('dashboard.tips.complete_scan') }}{% endif %}</p></div>
+    <div class="feature-grid three">
+      {% for tip in tips %}
+        <article class="feature-card"><span class="pixel-icon">{{ loop.index }}</span><h3>{{ t('dashboard.tips.tip') }} {{ loop.index }}</h3><p>{{ tc(tip) }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

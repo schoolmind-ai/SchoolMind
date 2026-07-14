@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.security.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('role.admin') }}</span>
+      <h1>{{ t('dashboard.security.title') }}</h1>
+      <p>{{ t('dashboard.security.intro') }}</p>
+    </div>
+
+    <div class="metric-strip">
+      <div class="metric-card urgent"><small>{{ t('dashboard.security.locked_accounts') }}</small><strong>{{ summary.locked }}</strong></div>
+      <div class="metric-card watch"><small>{{ t('dashboard.security.failed_attempts') }}</small><strong>{{ summary.failed_today }}</strong></div>
+      <div class="metric-card steady"><small>{{ t('dashboard.security.pending_resets') }}</small><strong>{{ summary.reset_pending }}</strong></div>
+    </div>
+
+    <div class="panel-list">
+      <h2>{{ t('dashboard.security.access_controls') }}</h2>
+      {% for user in users %}
+        <div class="list-row tall">
+          <div>
+            <strong>{{ user.name }}</strong>
+            <small>{{ user.email }} · {{ t('role.' ~ user.role) }} · {{ t('dashboard.security.failed') }}: {{ user.failed_login_count or 0 }} · {{ t('dashboard.security.locked_until') }}: {{ user.locked_until or t('dashboard.security.not_locked') }} · {{ t('dashboard.security.last_login') }}: {{ user.last_login_at or t('dashboard.security.never') }}</small>
+          </div>
+          <div class="row-actions">
+            <form method="post" action="{{ url_for('dashboard.admin_unlock_user', user_id=user.id) }}">
+              {% include "partials/form_csrf.html" %}
+              <button class="btn ghost" type="submit">{{ t('dashboard.security.unlock') }}</button>
+            </form>
+            <form method="post" action="{{ url_for('dashboard.admin_queue_reset_link', user_id=user.id) }}">
+              {% include "partials/form_csrf.html" %}
+              <button class="btn" type="submit">{{ t('dashboard.security.queue_reset') }}</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="panel-list">
+      <h2>{{ t('dashboard.security.events') }}</h2>
+      {% for event in events %}
+        <div class="list-row tall">
+          <div>
+            <strong>{{ event.event_type }}</strong>
+            <small>{{ event.email }} · {{ t('dashboard.security.success') }}: {{ t('dashboard.backups.yes') if event.success else t('dashboard.backups.no') }} · {{ event.ip_address }} · {{ event.created_at }}</small>
+            <small>{{ event.detail }}</small>
+          </div>
+          <span>{{ event.user_name or t('dashboard.security.unknown') }}</span>
+        </div>
+      {% else %}
+        <p class="muted">{{ t('dashboard.security.empty') }}</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

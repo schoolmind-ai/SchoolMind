@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.breathing.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head"><span class="eyebrow">{{ t('dashboard.breathing.title') }}</span><h1>{{ t('dashboard.breathing.heading') }}</h1><p>{{ totals.count or 0 }} {{ t('dashboard.breathing.sessions') }} · {{ ((totals.duration or 0) / 60)|round(1) }} {{ t('dashboard.breathing.minutes_practiced') }}</p></div>
+    <div class="dash-grid two">
+      <form class="pixel-form compact" method="post">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.breathing.record') }}</h2>
+        <label>{{ t('dashboard.breathing.technique') }}<select name="technique"><option value="box">{{ t('dashboard.breathing.box') }}</option><option value="4-6">{{ t('dashboard.breathing.inhale_exhale') }}</option><option value="grounding">{{ t('dashboard.breathing.grounding') }}</option></select></label>
+        <label>{{ t('dashboard.breathing.cycles') }}<input name="cycles" type="number" min="1" max="30" value="4"></label>
+        <label>{{ t('dashboard.breathing.duration') }}<input name="duration_seconds" type="number" min="30" max="3600" value="180"></label>
+        <label>{{ t('dashboard.breathing.mood_before') }}<select name="mood_before"><option value="1">1 {{ t('dashboard.student.value.hard') }}</option><option value="2">2 {{ t('dashboard.student.value.low') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.mixed') }}</option><option value="4">4 {{ t('dashboard.student.value.good') }}</option><option value="5">5 {{ t('dashboard.student.value.strong') }}</option></select></label>
+        <label>{{ t('dashboard.breathing.mood_after') }}<select name="mood_after"><option value="1">1 {{ t('dashboard.student.value.hard') }}</option><option value="2">2 {{ t('dashboard.student.value.low') }}</option><option value="3">3 {{ t('dashboard.student.value.mixed') }}</option><option value="4" selected>4 {{ t('dashboard.student.value.good') }}</option><option value="5">5 {{ t('dashboard.student.value.strong') }}</option></select></label>
+        <button class="btn primary" type="submit">{{ t('dashboard.breathing.save') }}</button>
+      </form>
+      <div class="panel-list breath-visual">
+        <h2>{{ t('dashboard.breathing.routine') }}</h2>
+        <div class="breath-orbit"><span>{{ t('dashboard.breathing.in') }}</span><span>{{ t('dashboard.breathing.hold') }}</span><span>{{ t('dashboard.breathing.out') }}</span></div>
+        <p class="muted">{{ t('dashboard.breathing.routine_note') }}</p>
+      </div>
+    </div>
+    <div class="panel-list">
+      <h2>{{ t('dashboard.breathing.history') }}</h2>
+      {% for item in sessions %}
+        <div class="list-row"><span>{{ tc(item.technique) }}</span><b>{{ item.cycles }} {{ t('dashboard.breathing.cycles_lower') }}</b><small>{{ item.mood_before }} → {{ item.mood_after }} · {{ item.created_at }}</small></div>
+      {% else %}<p class="muted">{{ t('dashboard.breathing.empty') }}</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

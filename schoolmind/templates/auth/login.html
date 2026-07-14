@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ t('auth.login.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<section class="auth-wrap auth-login-wrap">
+  <div class="auth-card-stack">
+    <form class="pixel-form login-form" method="post">
+      {% include "partials/form_csrf.html" %}
+      <input type="hidden" name="next" value="{{ next_target or '' }}">
+      <span class="eyebrow">{{ t('auth.login.eyebrow') }}</span>
+      <h1>{{ t('auth.login.title') }}</h1>
+      <label>{{ t('auth.common.email') }}<input name="email" type="email" autocomplete="email" required></label>
+      <label>{{ t('auth.common.password') }}<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn primary" type="submit">{{ t('auth.login.enter_workspace') }}</button>
+      {% if google_enabled %}
+        <a class="btn ghost" href="{{ url_for('auth.google_start') }}">{{ t('auth.login.continue_google') }}</a>
+      {% endif %}
+      {% if demo_experience_enabled %}<p class="muted">{{ t('auth.login.demo_credentials') }}</p>{% endif %}
+      <p class="muted"><a href="{{ url_for('auth.forgot_password') }}">{{ t('auth.login.forgot_password') }}</a></p>
+    </form>
+
+    {% if demo_experience_enabled %}<div class="login-demo-strip" aria-label="{{ t('auth.login.demo_roles_aria') }}">
+      <div>
+        <strong>{{ t('auth.login.try_without_friction') }}</strong>
+        <span class="muted">{{ t('auth.login.guided_demo_intro') }}</span>
+      </div>
+      <div class="chip-row">
+        {% for key in ['student', 'teacher', 'counselor', 'admin'] %}
+          <form action="{{ url_for('public.instant_experience', role=key) }}" method="post">
+            {% include "partials/form_csrf.html" %}
+            <button class="chip" type="submit">{{ t('role.' ~ key) }}</button>
+          </form>
+        {% endfor %}
+      </div>
+    </div>{% endif %}
+  </div>
+</section>
+{% endblock %}

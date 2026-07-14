@@ -1,0 +1,2206 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/route_audit.py",
+  "summary": {
+    "registered_rules": 114,
+    "unique_endpoints": 112,
+    "html_get_rules_verified_en_ar": 75,
+    "guest_auth_boundaries_verified": 43
+  },
+  "routes": [
+    {
+      "route": "/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.index",
+      "surface": "HTML",
+      "templates": [
+        "public/index.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:44",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/about",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.about",
+      "surface": "HTML",
+      "templates": [
+        "public/about.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:296",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/accessibility",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.accessibility",
+      "surface": "HTML",
+      "templates": [
+        "public/accessibility.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:176",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/activity",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (any role)",
+      "endpoint": "dashboard.activity_center",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/activity.html"
+      ],
+      "guards": [
+        "workspace session"
+      ],
+      "source": "schoolmind/dashboard.py:109",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_home",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/admin.html"
+      ],
+      "guards": [
+        "role: admin"
+      ],
+      "source": "schoolmind/dashboard.py:1297",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/backups",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_backups",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/backups.html"
+      ],
+      "guards": [
+        "role: admin"
+      ],
+      "source": "schoolmind/dashboard.py:1399",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/billing",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_billing",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/billing.html"
+      ],
+      "guards": [
+        "role: admin"
+      ],
+      "source": "schoolmind/dashboard.py:1664",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/billing/checkout/<plan>",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.billing_checkout",
+      "surface": "Redirect",
+      "templates": [],
+      "guards": [
+        "role: admin",
+        "rate limit"
+      ],
+      "source": "schoolmind/dashboard.py:1681",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/admin/billing/manual-activate",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.billing_manual_activate",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: admin",
+        "CSRF",
+        "rate limit"
+      ],
+      "source": "schoolmind/dashboard.py:1700",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/admin/consent",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_consent",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/consent.html"
+      ],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1624",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/data-retention/run",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_run_retention",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1745",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/admin/database",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_database",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/database.html"
+      ],
+      "guards": [
+        "role: admin"
+      ],
+      "source": "schoolmind/dashboard.py:1450",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/import",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_import",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/import.html"
+      ],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1578",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/invites",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_invites",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/invites.html"
+      ],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1508",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/onboarding",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.onboarding",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/onboarding.html"
+      ],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1200",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/operations",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_operations",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/operations.html"
+      ],
+      "guards": [
+        "role: admin"
+      ],
+      "source": "schoolmind/dashboard.py:1333",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/outbox",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_outbox",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/outbox.html"
+      ],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1550",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/plan-limits",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_plan_limits",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/plan_limits.html"
+      ],
+      "guards": [
+        "role: admin"
+      ],
+      "source": "schoolmind/dashboard.py:1382",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/security",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_security",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/security.html"
+      ],
+      "guards": [
+        "role: admin"
+      ],
+      "source": "schoolmind/dashboard.py:1777",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/security/users/<int:user_id>/reset-link",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_queue_reset_link",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1826",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/admin/security/users/<int:user_id>/unlock",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_unlock_user",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1809",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/admin/settings",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_settings",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/settings.html"
+      ],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1596",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/admin/users",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_create_user",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1459",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/admin/users/<int:user_id>/toggle",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "dashboard.admin_toggle_user",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1491",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/ai-safety",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.safety",
+      "surface": "HTML",
+      "templates": [
+        "public/safety.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:279",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/api/billing/webhook",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Public webhook (HMAC authenticated)",
+      "endpoint": "api.billing_webhook",
+      "surface": "JSON",
+      "templates": [],
+      "guards": [
+        "rate limit",
+        "HMAC signature"
+      ],
+      "source": "schoolmind/api.py:44",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/api/export/students.csv",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (admin, counselor)",
+      "endpoint": "api.export_students",
+      "surface": "CSV download",
+      "templates": [],
+      "guards": [
+        "role: admin/counselor"
+      ],
+      "source": "schoolmind/api.py:125",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/api/export/workspace.json",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (admin)",
+      "endpoint": "api.export_workspace_json",
+      "surface": "JSON download",
+      "templates": [],
+      "guards": [
+        "role: admin"
+      ],
+      "source": "schoolmind/api.py:166",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/api/health",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public API",
+      "endpoint": "api.health",
+      "surface": "JSON",
+      "templates": [],
+      "guards": [
+        "rate limit"
+      ],
+      "source": "schoolmind/api.py:16",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/api/nour/messages",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.nour_messages_api",
+      "surface": "JSON",
+      "templates": [],
+      "guards": [
+        "role: student",
+        "CSRF",
+        "rate limit"
+      ],
+      "source": "schoolmind/dashboard.py:516",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/api/pulse",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (counselor, admin)",
+      "endpoint": "api.pulse",
+      "surface": "JSON",
+      "templates": [],
+      "guards": [
+        "role: counselor/admin"
+      ],
+      "source": "schoolmind/api.py:110",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/api/readiness",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public API",
+      "endpoint": "api.readiness",
+      "surface": "JSON",
+      "templates": [],
+      "guards": [
+        "rate limit"
+      ],
+      "source": "schoolmind/api.py:22",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/app",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (any role)",
+      "endpoint": "dashboard.app_home",
+      "surface": "Redirect",
+      "templates": [],
+      "guards": [
+        "workspace session"
+      ],
+      "source": "schoolmind/dashboard.py:70",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/auth/google",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authentication workflow (public)",
+      "endpoint": "auth.google_start",
+      "surface": "Redirect",
+      "templates": [],
+      "guards": [
+        "rate limit"
+      ],
+      "source": "schoolmind/auth.py:79",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/auth/google/callback",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authentication workflow (public)",
+      "endpoint": "auth.google_callback",
+      "surface": "Redirect",
+      "templates": [],
+      "guards": [
+        "rate limit"
+      ],
+      "source": "schoolmind/auth.py:98",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/breathing-center",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.breathing_center",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/breathing.html"
+      ],
+      "guards": [
+        "role: student",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:713",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/companion",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.companion_studio",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/companion.html"
+      ],
+      "guards": [
+        "role: student",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:478",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/compliance",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.compliance",
+      "surface": "HTML",
+      "templates": [
+        "public/compliance.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:82",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/contact",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Public",
+      "endpoint": "public.contact",
+      "surface": "HTML",
+      "templates": [
+        "public/contact.html"
+      ],
+      "guards": [
+        "CSRF",
+        "rate limit"
+      ],
+      "source": "schoolmind/public.py:426",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/contact-sales",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.contact_sales",
+      "surface": "Redirect",
+      "templates": [],
+      "guards": [],
+      "source": "schoolmind/public.py:97",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/cookies",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.cookies",
+      "surface": "HTML",
+      "templates": [
+        "public/cookies.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:87",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/counselor",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (counselor, admin)",
+      "endpoint": "dashboard.counselor_home",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/counselor.html"
+      ],
+      "guards": [
+        "role: counselor/admin"
+      ],
+      "source": "schoolmind/dashboard.py:837",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/counselor/alert/<int:event_id>/action",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (counselor, admin)",
+      "endpoint": "dashboard.counselor_alert_action",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: counselor/admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1143",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/counselor/intervention",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (counselor, admin)",
+      "endpoint": "dashboard.counselor_intervention",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: counselor/admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1093",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/counselor/playbooks",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (counselor, admin)",
+      "endpoint": "dashboard.counselor_playbooks",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/playbooks.html"
+      ],
+      "guards": [
+        "role: counselor/admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:921",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/counselor/student/<int:user_id>",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (counselor, admin)",
+      "endpoint": "dashboard.counselor_student",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/student_detail.html"
+      ],
+      "guards": [
+        "role: counselor/admin"
+      ],
+      "source": "schoolmind/dashboard.py:1027",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/counselor/student/<int:user_id>/plan",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (counselor, admin)",
+      "endpoint": "dashboard.counselor_create_plan",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: counselor/admin",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:1116",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/counselors",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.counselors",
+      "surface": "HTML",
+      "templates": [
+        "public/counselors.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:156",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/daily-tips",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.daily_tips",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/daily_tips.html"
+      ],
+      "guards": [
+        "role: student"
+      ],
+      "source": "schoolmind/dashboard.py:752",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/data-processing-agreement",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.data_processing_agreement",
+      "surface": "HTML",
+      "templates": [
+        "public/data_processing_agreement.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:405",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/data-retention",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.data_retention",
+      "surface": "HTML",
+      "templates": [
+        "public/data_retention.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:181",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/demo",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.demo",
+      "surface": "HTML",
+      "templates": [
+        "public/demo.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:55",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/dpa",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.data_processing_agreement",
+      "surface": "HTML",
+      "templates": [
+        "public/data_processing_agreement.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:405",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/experience/<role>",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Public",
+      "endpoint": "public.instant_experience",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "CSRF",
+        "rate limit"
+      ],
+      "source": "schoolmind/public.py:123",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/faq",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.faq",
+      "surface": "HTML",
+      "templates": [
+        "public/faq.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:171",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/features",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.features",
+      "surface": "HTML",
+      "templates": [
+        "public/features.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:72",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/forgot-password",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authentication workflow (public)",
+      "endpoint": "auth.forgot_password",
+      "surface": "HTML",
+      "templates": [
+        "auth/forgot_password.html"
+      ],
+      "guards": [
+        "CSRF",
+        "rate limit"
+      ],
+      "source": "schoolmind/auth.py:194",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/games",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.games",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/games.html"
+      ],
+      "guards": [
+        "role: student",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:616",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/goals",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.student_goals",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/goals.html"
+      ],
+      "guards": [
+        "role: student",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:573",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/help",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (any role)",
+      "endpoint": "dashboard.help_center",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/help.html"
+      ],
+      "guards": [
+        "workspace session"
+      ],
+      "source": "schoolmind/dashboard.py:83",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/human-review",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.human_review",
+      "surface": "HTML",
+      "templates": [
+        "public/human_review.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:77",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/humans.txt",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.humans_txt",
+      "surface": "Plain text",
+      "templates": [],
+      "guards": [],
+      "source": "schoolmind/public.py:241",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/implementation",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.implementation",
+      "surface": "HTML",
+      "templates": [
+        "public/implementation.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:301",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/incident-response",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.incident_response",
+      "surface": "HTML",
+      "templates": [
+        "public/incident_response.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:416",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/invite/<token>",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authentication workflow (public)",
+      "endpoint": "auth.accept_invite",
+      "surface": "HTML",
+      "templates": [
+        "auth/accept_invite.html"
+      ],
+      "guards": [
+        "CSRF",
+        "rate limit"
+      ],
+      "source": "schoolmind/auth.py:353",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/journal",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.journal_studio",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/journal.html"
+      ],
+      "guards": [
+        "role: student",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:450",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/llms.txt",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.llms_txt",
+      "surface": "Plain text",
+      "templates": [],
+      "guards": [],
+      "source": "schoolmind/public.py:255",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/login",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authentication workflow (public)",
+      "endpoint": "auth.login",
+      "surface": "HTML",
+      "templates": [
+        "auth/login.html"
+      ],
+      "guards": [
+        "CSRF",
+        "rate limit"
+      ],
+      "source": "schoolmind/auth.py:30",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/logout",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authentication workflow (public)",
+      "endpoint": "auth.logout",
+      "surface": "Redirect",
+      "templates": [],
+      "guards": [],
+      "source": "schoolmind/auth.py:254",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/mood-diary",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.mood_diary",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/mood_diary.html"
+      ],
+      "guards": [
+        "role: student"
+      ],
+      "source": "schoolmind/dashboard.py:744",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/pilot",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.pilot",
+      "surface": "HTML",
+      "templates": [
+        "public/pilot.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:166",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/platform",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Platform authenticated",
+      "endpoint": "platform.platform_home",
+      "surface": "HTML",
+      "templates": [
+        "platform/home.html"
+      ],
+      "guards": [
+        "platform session"
+      ],
+      "source": "schoolmind/platform.py:56",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/platform/account",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Platform authenticated",
+      "endpoint": "platform.platform_account_settings",
+      "surface": "HTML",
+      "templates": [
+        "platform/account.html"
+      ],
+      "guards": [
+        "platform session",
+        "CSRF"
+      ],
+      "source": "schoolmind/platform.py:87",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/platform/coupons",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Platform authenticated",
+      "endpoint": "platform.platform_coupons",
+      "surface": "HTML",
+      "templates": [
+        "platform/coupons.html"
+      ],
+      "guards": [
+        "platform session",
+        "CSRF"
+      ],
+      "source": "schoolmind/platform.py:192",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/platform/coupons/<int:coupon_id>/status",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Platform authenticated",
+      "endpoint": "platform.platform_coupon_status",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "platform session",
+        "CSRF"
+      ],
+      "source": "schoolmind/platform.py:231",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/platform/login",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Platform public/auth workflow",
+      "endpoint": "platform.platform_login",
+      "surface": "HTML",
+      "templates": [
+        "platform/login.html"
+      ],
+      "guards": [
+        "CSRF",
+        "rate limit"
+      ],
+      "source": "schoolmind/platform.py:15",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/platform/logout",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Platform public/auth workflow",
+      "endpoint": "platform.platform_logout",
+      "surface": "Redirect",
+      "templates": [],
+      "guards": [],
+      "source": "schoolmind/platform.py:50",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/platform/schools/<int:school_id>",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Platform authenticated",
+      "endpoint": "platform.platform_school",
+      "surface": "HTML",
+      "templates": [
+        "platform/school.html"
+      ],
+      "guards": [
+        "platform session"
+      ],
+      "source": "schoolmind/platform.py:158",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/platform/schools/<int:school_id>/status",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Platform authenticated",
+      "endpoint": "platform.platform_school_status",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "platform session",
+        "CSRF"
+      ],
+      "source": "schoolmind/platform.py:176",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/platform/settings",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Platform authenticated",
+      "endpoint": "platform.platform_settings",
+      "surface": "HTML",
+      "templates": [
+        "platform/settings.html"
+      ],
+      "guards": [
+        "platform session",
+        "CSRF"
+      ],
+      "source": "schoolmind/platform.py:246",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/preferences",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Public",
+      "endpoint": "public.public_preferences",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "CSRF"
+      ],
+      "source": "schoolmind/public.py:306",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/preferences/personalize",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Public",
+      "endpoint": "public.personalize_preferences",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "CSRF"
+      ],
+      "source": "schoolmind/public.py:328",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/pricing",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.pricing",
+      "surface": "HTML",
+      "templates": [
+        "public/pricing.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:49",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/privacy",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.privacy",
+      "surface": "HTML",
+      "templates": [
+        "public/privacy.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:394",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/product",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.product",
+      "surface": "HTML",
+      "templates": [
+        "public/product.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:67",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/progress",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.progress_hub",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/progress.html"
+      ],
+      "guards": [
+        "role: student"
+      ],
+      "source": "schoolmind/dashboard.py:643",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/reports",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (counselor, admin)",
+      "endpoint": "dashboard.reports",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/reports.html"
+      ],
+      "guards": [
+        "role: counselor/admin"
+      ],
+      "source": "schoolmind/dashboard.py:949",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/request-demo",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.request_demo",
+      "surface": "HTML",
+      "templates": [
+        "public/request_demo.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:92",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/reset-password/<token>",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authentication workflow (public)",
+      "endpoint": "auth.reset_password",
+      "surface": "HTML",
+      "templates": [
+        "auth/reset_password.html"
+      ],
+      "guards": [
+        "CSRF",
+        "rate limit"
+      ],
+      "source": "schoolmind/auth.py:224",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/resources",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.resources",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/resources.html"
+      ],
+      "guards": [
+        "role: student"
+      ],
+      "source": "schoolmind/dashboard.py:734",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/robots.txt",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.robots_txt",
+      "surface": "Plain text",
+      "templates": [],
+      "guards": [],
+      "source": "schoolmind/public.py:191",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/safety",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.safety",
+      "surface": "HTML",
+      "templates": [
+        "public/safety.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:279",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/schools",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.schools",
+      "surface": "HTML",
+      "templates": [
+        "public/schools.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:146",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/security",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.security",
+      "surface": "HTML",
+      "templates": [
+        "public/security.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:291",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/settings/account",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authenticated workspace (any role)",
+      "endpoint": "dashboard.account_settings",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/account_settings.html"
+      ],
+      "guards": [
+        "workspace session",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:155",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/sitemap.xml",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.sitemap_xml",
+      "surface": "XML",
+      "templates": [],
+      "guards": [],
+      "source": "schoolmind/public.py:214",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/start",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "Authentication workflow (public)",
+      "endpoint": "auth.start",
+      "surface": "HTML",
+      "templates": [
+        "auth/start.html"
+      ],
+      "guards": [
+        "CSRF",
+        "rate limit"
+      ],
+      "source": "schoolmind/auth.py:260",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/static/<path:filename>",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public asset",
+      "endpoint": "static",
+      "surface": "Asset",
+      "templates": [],
+      "guards": [],
+      "source": "Flask built-in",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/student",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.student_home",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/student.html"
+      ],
+      "guards": [
+        "role: student"
+      ],
+      "source": "schoolmind/dashboard.py:238",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/student-data-notice",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.student_data_notice",
+      "surface": "HTML",
+      "templates": [
+        "public/student_data_notice.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:411",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/student/assessment",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.student_assessment",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: student",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:304",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/student/checkin",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.student_checkin",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: student",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:281",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/student/companion",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.student_companion",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: student",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:418",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/student/journal",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.student_journal",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: student",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:373",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/student/support",
+      "methods": [
+        "POST"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.student_support",
+      "surface": "Action/redirect",
+      "templates": [],
+      "guards": [
+        "role: student",
+        "CSRF"
+      ],
+      "source": "schoolmind/dashboard.py:396",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/students",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.students",
+      "surface": "HTML",
+      "templates": [
+        "public/students.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:161",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/subprocessors",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.subprocessors",
+      "surface": "HTML",
+      "templates": [
+        "public/subprocessors.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:186",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/support-plans",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.support_plans",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/support_plans.html"
+      ],
+      "guards": [
+        "role: student"
+      ],
+      "source": "schoolmind/dashboard.py:702",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/teacher",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (teacher)",
+      "endpoint": "dashboard.teacher_home",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/teacher.html"
+      ],
+      "guards": [
+        "role: teacher"
+      ],
+      "source": "schoolmind/dashboard.py:760",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/teachers",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.teachers",
+      "surface": "HTML",
+      "templates": [
+        "public/teachers.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:151",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/terms",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.terms",
+      "surface": "HTML",
+      "templates": [
+        "public/terms.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:421",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/trial",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.trial",
+      "surface": "HTML",
+      "templates": [
+        "public/trial.html"
+      ],
+      "guards": [],
+      "source": "schoolmind/public.py:102",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    },
+    {
+      "route": "/try",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Public",
+      "endpoint": "public.try_demo",
+      "surface": "Redirect",
+      "templates": [],
+      "guards": [
+        "rate limit"
+      ],
+      "source": "schoolmind/public.py:107",
+      "i18n_audit": {
+        "en": "N/A (non-HTML)",
+        "ar": "N/A (non-HTML)"
+      }
+    },
+    {
+      "route": "/weekly-summary",
+      "methods": [
+        "GET"
+      ],
+      "classification": "Authenticated workspace (student)",
+      "endpoint": "dashboard.weekly_summary",
+      "surface": "HTML",
+      "templates": [
+        "dashboard/weekly_summary.html"
+      ],
+      "guards": [
+        "role: student"
+      ],
+      "source": "schoolmind/dashboard.py:673",
+      "i18n_audit": {
+        "en": "PASS",
+        "ar": "PASS"
+      }
+    }
+  ]
+}

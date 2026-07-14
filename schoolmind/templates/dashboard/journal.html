@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.journal.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head"><span class="eyebrow">{{ t('dashboard.journal.title') }}</span><h1>{{ t('dashboard.journal.heading') }}</h1><p>{{ t('dashboard.journal.intro') }}</p></div>
+    <div class="dash-grid two">
+      <form class="pixel-form compact {% if not consent_ok %}locked-section{% endif %}" method="post">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.journal.new_entry') }}</h2>
+        <label>{{ t('dashboard.student.field.mood') }}<select name="mood"><option value="5">5 {{ t('dashboard.student.value.strong') }}</option><option value="4">4 {{ t('dashboard.student.value.good') }}</option><option value="3" selected>3 {{ t('dashboard.student.value.mixed') }}</option><option value="2">2 {{ t('dashboard.student.value.low') }}</option><option value="1">1 {{ t('dashboard.student.value.hard') }}</option></select></label>
+        <label>{{ t('dashboard.journal.entry') }}<textarea name="body" rows="10" placeholder="{{ t('dashboard.journal.placeholder') }}"></textarea></label>
+        <button class="btn primary" type="submit" {% if not consent_ok %}disabled{% endif %}>{{ t('dashboard.journal.save') }}</button>
+      </form>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.journal.prompts') }}</h2>
+        <div class="list-row tall"><span>{{ t('dashboard.journal.changed') }}</span><b>{{ t('dashboard.journal.prompt') }}</b><small>{{ t('dashboard.journal.changed_note') }}</small></div>
+        <div class="list-row tall"><span>{{ t('dashboard.journal.need') }}</span><b>{{ t('dashboard.journal.prompt') }}</b><small>{{ t('dashboard.journal.need_note') }}</small></div>
+        <div class="list-row tall"><span>{{ t('dashboard.journal.wait') }}</span><b>{{ t('dashboard.journal.prompt') }}</b><small>{{ t('dashboard.journal.wait_note') }}</small></div>
+      </div>
+    </div>
+    <div class="panel-list">
+      <h2>{{ t('dashboard.journal.recent') }}</h2>
+      {% for item in journals %}
+        <article class="list-row tall"><span><bdi dir="auto">{{ item.body }}</bdi></span><b class="risk {{ item.risk_level }}">{{ tc(item.risk_level) }}</b><small>{{ tc(item.ai_summary) }} · {{ item.created_at }}</small></article>
+      {% else %}<p class="muted">{{ t('dashboard.journal.empty') }}</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

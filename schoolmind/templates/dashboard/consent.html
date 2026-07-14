@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard.consent.title') }} · SchoolMind{% endblock %}
+{% block content %}
+<div class="dashboard-layout">
+  {% include "partials/dashboard_nav.html" %}
+  <section class="dash-main">
+    <div class="dash-head">
+      <span class="eyebrow">{{ t('dashboard.consent.title') }}</span>
+      <h1>{{ t('dashboard.consent.heading') }}</h1>
+      <p>{{ t('dashboard.consent.intro') }}</p>
+    </div>
+    <div class="dash-grid two">
+      <form class="pixel-form compact" method="post">
+        {% include "partials/form_csrf.html" %}
+        <h2>{{ t('dashboard.consent.add') }}</h2>
+        <label>{{ t('dashboard.consent.student') }}<select name="student_id">{% for student in students %}<option value="{{ student.id }}">{{ student.name }} · {{ student.email }}</option>{% endfor %}</select></label>
+        <label>{{ t('dashboard.consent.guardian_name') }}<input name="guardian_name" required></label>
+        <label>{{ t('dashboard.consent.guardian_email') }}<input name="guardian_email" type="email" required></label>
+        <label>{{ t('dashboard.consent.status') }}<select name="status"><option value="pending">{{ t('dashboard.consent.pending') }}</option><option value="recorded">{{ t('dashboard.consent.recorded') }}</option><option value="declined">{{ t('dashboard.consent.declined') }}</option></select></label>
+        <label>{{ t('dashboard.consent.note') }}<textarea name="note" rows="4"></textarea></label>
+        <button class="btn primary" type="submit">{{ t('dashboard.consent.save') }}</button>
+      </form>
+      <div class="panel-list">
+        <h2>{{ t('dashboard.consent.records') }}</h2>
+        {% for item in records %}
+          <div class="list-row tall"><span>{{ item.student_name }} · {{ item.guardian_name }}</span><b>{{ tc(item.status) }}</b><small><bdi>{{ item.guardian_email }}</bdi> · <bdi dir="auto">{{ item.note }}</bdi></small></div>
+        {% else %}<p class="muted">{{ t('dashboard.consent.empty') }}</p>{% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

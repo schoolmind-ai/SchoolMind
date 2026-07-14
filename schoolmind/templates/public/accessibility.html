@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ t('public.accessibility.title') }} · SchoolMind AI{% endblock %}
+{% block content %}
+<section class="section page-hero compact">
+  <span class="eyebrow">{{ t('public.accessibility.eyebrow') }}</span>
+  <h1>{{ t('public.accessibility.heading') }}</h1>
+  <p class="lead">{{ t('public.accessibility.lead') }}</p>
+</section>
+<section class="section phase-grid">
+  <article class="company-card"><h2>{{ t('public.accessibility.controls_title') }}</h2><p>{{ t('public.accessibility.controls_body') }}</p></article>
+  <article class="company-card"><h2>{{ t('public.accessibility.keyboard_title') }}</h2><p>{{ t('public.accessibility.keyboard_body') }}</p></article>
+  <article class="company-card"><h2>{{ t('public.accessibility.qa_title') }}</h2><p>{{ t('public.accessibility.qa_body') }}</p></article>
+</section>
+{% endblock %}
